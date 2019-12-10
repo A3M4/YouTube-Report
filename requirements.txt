@@ -1,0 +1,8 @@
+pylab
+numpy
+seaborn
+matplotlib
+PIL
+wordcloud
+reportlab
+PyPDF2
