@@ -1,5 +1,4 @@
 import math
-import pylab as pl
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -8,6 +7,7 @@ from parse import *
 from PIL import Image
 from io import BytesIO
 from wordcloud import WordCloud
+from matplotlib import pylab as pl
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.platypus import Paragraph, Frame
