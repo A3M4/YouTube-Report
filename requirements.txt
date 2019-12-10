@@ -2,7 +2,7 @@ pylab
 numpy
 seaborn
 matplotlib
-PIL
+Pillow
 wordcloud
 reportlab
 PyPDF2
