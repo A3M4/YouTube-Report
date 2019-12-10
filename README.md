@@ -31,7 +31,7 @@ Extract the Takeout File(from step 2) and move it to the repository folder(from 
 
 ### 5. Install Dependencies
 
-Open [command prompt or Terminal window](https://tutorial.djangogirls.org/en/intro_to_command_line/#what-is-the-command-line) inside this repository folder, type the following and press enter:
+Open [command prompt or Terminal window](https://tutorial.djangogirls.org/en/intro_to_command_line/#what-is-the-command-line) in this repository folder, type the following and press enter:
 
 ```
 pip install -r requirements.txt
