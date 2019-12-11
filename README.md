@@ -5,7 +5,7 @@
 
 ### 1. Install Python 3+
 
-If you don't already have Python 3+ installed, download it from https://www.python.org/downloads/. 
+If you don't already have Python 3+ installed on your computer, download it from https://www.python.org/downloads/. 
 
 ### 2. Get Your YouTube Data
 
