@@ -1,6 +1,5 @@
 # Generate Your Personal YouTube Report
 <img src="https://i.ibb.co/HngnXpn/You-Tube-Report.png" alt="avatar" width="571" height="625">
-This is to generate a personal YouTube report from your Google history data.
 
 ## Getting Started
 
