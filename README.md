@@ -22,7 +22,7 @@ On https://github.com/A3M4/Personal-YouTube-Report-Generator, click the green "C
 
 ### 4. Extract the Takeout File
 
-Extract the Takeout File(from step 2) and move it to the repository folder(from step 3). Now the repository folder looks like below.
+Extract the Takeout File(from step 2) and move it to the repository folder(from step 3). Now the files in Repository folder look like below.
 
 
 
