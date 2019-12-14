@@ -1,4 +1,7 @@
 import math
+import subprocess
+import sys
+
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -79,7 +82,7 @@ class Visualization:
         print('Generating Word Cloud.....')
         unique_string = (" ").join(searchClean)
         bg = np.array(Image.open(logo))
-        wordcloud = WordCloud(mask=bg, background_color="white", colormap='Set2', font_path='arial',
+        wordcloud = WordCloud(mask=bg, background_color="white", colormap='Set2', font_path='Arial',
                               max_words=380,contour_width=2, prefer_horizontal=1).generate(unique_string)
 
         plt.figure()
@@ -223,7 +226,12 @@ class Visualization:
         pdf.addPage(PdfFileReader(BytesIO(imgTemp.getvalue())).getPage(0))
         pdf.write(open("YouTube_Report.pdf","wb"))
         print('Congratulations! You have successfully created your personal YouTube report!')
-        os.startfile("YouTube_Report.pdf")
+        if sys.platform == "win32":
+            os.startfile("YouTube_Report.pdf")
+        else:
+            opener = "open" if sys.platform == "darwin" else "xdg-open"
+            subprocess.call([opener, "YouTube_Report.pdf"])
+
 
 
 
