@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import math
 import subprocess
 import sys
