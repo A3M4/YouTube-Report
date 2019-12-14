@@ -19,8 +19,8 @@ from reportlab.lib.styles import ParagraphStyle
 
 
 
-image_dir = os.getcwd() + "/Images/"
-logo = image_dir + "LOGO.png"
+image_dir = os.path.join(os.getcwd(),"Images/")
+logo = os.path.join(image_dir,"LOGO.png")
 urls = HTML().find_links()
 searchRaw, searchClean = HTML().searchHistory()
 
@@ -65,7 +65,7 @@ class Visualization:
                      (0, 0), (0, -20), fontsize=20, color='steelblue', fontweight="bold",
                      fontname="Comic Sans MS", xycoords='axes fraction', textcoords='offset points', va='top')
 
-        plt.savefig(image_dir + 'week_heatmap.png', dpi=400)
+        plt.savefig(os.path.join(image_dir,'week_heatmap.png'), dpi=400)
         plt.clf()
 
 
@@ -81,7 +81,7 @@ class Visualization:
                      fontname="Comic Sans MS", xycoords='axes fraction', textcoords='offset points', va='top')
 
         plt.axis('off')
-        plt.savefig(image_dir + 'memory.png', dpi=400)
+        plt.savefig(os.path.join(image_dir, 'memory.png'), dpi=400)
         plt.clf()
 
 
@@ -107,7 +107,7 @@ class Visualization:
                      (0, 0), (-10, 10), fontsize=13, color='steelblue', fontweight="bold",
                      fontname="Comic Sans MS", xycoords='axes fraction', textcoords='offset points', va='top')
 
-        plt.savefig(image_dir + 'word_cloud.png', dpi=400)
+        plt.savefig(os.path.join(image_dir,'word_cloud.png'), dpi=400)
         plt.clf()
 
 
@@ -128,7 +128,7 @@ class Visualization:
         splot.grid(False)
         plt.title("Breakdown of Your Activity on Youtube",
                   fontsize=24, color='steelblue', fontweight="bold", fontname="Comic Sans MS")
-        plt.savefig(image_dir + 'bar.png', dpi=400)
+        plt.savefig(os.path.join(image_dir,'bar.png'), dpi=400)
         plt.clf()
 
 
@@ -148,19 +148,19 @@ class Visualization:
         plt.annotate(scoreValue,
                      (0, 0), (115, 154), fontsize=54, color='teal', fontweight="bold",
                      fontname="Comic Sans MS", xycoords='axes fraction', textcoords='offset points', va='top')
-        plt.savefig(image_dir + 'score.png', dpi=400)
+        plt.savefig(os.path.join(image_dir,'score.png'), dpi=400)
         plt.clf()
 
 
 
     def gen_pdf(self):
         print('Combining Images into PDF.....')
-        path1 = image_dir + 'week_heatmap.png'
-        path2 = image_dir + 'memory.png'
-        path3 = image_dir + 'word_cloud.png'
-        path4 = image_dir + 'bar.png'
-        path5 = image_dir + 'score.png'
-        path6 = image_dir + 'red.png'
+        path1 = os.path.join(image_dir, 'week_heatmap.png')
+        path2 = os.path.join(image_dir, 'memory.png')
+        path3 = os.path.join(image_dir, 'word_cloud.png')
+        path4 = os.path.join(image_dir, 'bar.png')
+        path5 = os.path.join(image_dir, 'score.png')
+        path6 = os.path.join(image_dir, 'red.png')
         pdf = PdfFileWriter()
 
         # Using ReportLab Canvas to insert image into PDF
@@ -234,7 +234,8 @@ class Visualization:
 
         imgDoc.save()
         pdf.addPage(PdfFileReader(BytesIO(imgTemp.getvalue())).getPage(0))
-        pdf.write(open("YouTube_Report.pdf","wb"))
+        with open("YouTube_Report.pdf","wb") as f:
+        	pdf.write(f)
         print('Congratulations! You have successfully created your personal YouTube report!')
         if sys.platform == "win32":
             os.startfile("YouTube_Report.pdf")

@@ -6,20 +6,22 @@ import itertools
 import collections
 
 
-Dir = os.getcwd() + "/Takeout/YouTube/"
-watchHistory = Dir + 'history/watch-history.html'
-searchHistory = Dir + 'history/search-history.html'
-commentHistory = Dir + 'my-comments/my-comments.html'
-likeHistory = Dir + 'playlists/likes.json'
+Dir = os.path.join(os.getcwd(),"/Takeout/YouTube/")
+watchHistory = os.path.join(Dir,'history/watch-history.html')
+searchHistory = os.path.join(Dir,'history/search-history.html')
+commentHistory = os.path.join(Dir,'my-comments/my-comments.html')
+likeHistory = os.path.join(Dir,'playlists/likes.json')
 
 
 
 class HTML:
-
-    htmlWatch = open(watchHistory, 'r', encoding='utf-8').read()
-    htmlSearch = open(searchHistory, 'r', encoding='utf-8').read()
+	with open(watchHistory, 'r', encoding='utf-8') as f:
+	    htmlWatch = f.read()
+	with open(searchHistory, 'r', encoding='utf-8') as f:
+	    htmlSearch = f.read()
     try:
-        htmlComment = open(commentHistory, 'r', encoding='utf-8').read()
+    	with open(commentHistory, 'r', encoding='utf-8') as f:
+	        htmlComment = f.read()
     except: pass
 
     def find_links(self):
