@@ -75,10 +75,13 @@ class HTML:
 
 
     def commentHistory(self):
-        pattern = re.compile(r'<a href=".*?">')
-        matchList = pattern.findall(str(HTML.htmlComment))
-        link = matchList[-1][9:][:-2]
-        return link, matchList
+        try:
+            pattern = re.compile(r'<a href=".*?">')
+            matchList = pattern.findall(str(HTML.htmlComment))
+            link = matchList[-1][9:][:-2]
+            return link, matchList
+        except:
+            pass
 
 
 
