@@ -20,8 +20,16 @@ image_dir = os.getcwd() + "/Images/"
 logo = image_dir + "LOGO.png"
 urls = HTML().find_links()
 searchRaw, searchClean = HTML().searchHistory()
-link, allLinks = HTML().commentHistory()
-like, allLikes = HTML().likeHistory()
+
+try:
+    link, allLinks = HTML().commentHistory()
+except TypeError:
+    link = allLinks = ''
+
+try:
+    like, allLikes = HTML().likeHistory()
+except FileNotFoundError:
+    like = allLikes = ''
 
 
 class Visualization:
