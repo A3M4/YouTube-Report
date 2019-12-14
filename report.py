@@ -61,8 +61,7 @@ class Visualization:
         plt.title("What Time Do You Usually Watch Youtube Videos? (Eastern Standard Time)",
                   fontsize=26, color='steelblue',fontweight="bold", fontname="Comic Sans MS")
 
-        plt.annotate("             The plot above is based on a total of " +
-                     str(len(HTML().find_links())) +" videos you have watched",
+        plt.annotate("             The plot above is based on a total of %s videos you have watched"%(len(HTML().find_links())),
                      (0, 0), (0, -20), fontsize=20, color='steelblue', fontweight="bold",
                      fontname="Comic Sans MS", xycoords='axes fraction', textcoords='offset points', va='top')
 
@@ -103,8 +102,7 @@ class Visualization:
         plt.title("What Do You Usually Search on YouTube?",
                   fontsize=18, color='steelblue', fontweight="bold", fontname="Comic Sans MS")
 
-        plt.annotate("   WordCloud is based on a total of " +
-                      str(len(searchClean)) + " search queries",
+        plt.annotate("   WordCloud is based on a total of %s search queries"%(str(len(searchClean))),
                      (0, 0), (-10, 10), fontsize=13, color='steelblue', fontweight="bold",
                      fontname="Comic Sans MS", xycoords='axes fraction', textcoords='offset points', va='top')
 
@@ -200,35 +198,35 @@ class Visualization:
         # first watch
         bodyStyle = ParagraphStyle('Body', fontSize=31)
         items1 = []
-        link1 = '<link href='+urls[-1]+'>PLAY</link>'
+        link1 = '<link href=%s>PLAY</link>'%(urls[-1])
         items1.append(Paragraph(link1, bodyStyle))
         f1 = Frame(inch*24.1, inch*14.89, inch*12, inch*2)
         f1.addFromList(items1, imgDoc)
 
         # most watch
         items2 = []
-        link2 = '<link href=' + max(set(urls), key=urls.count) + '>PLAY</link>'
+        link2 = '<link href=%s>PLAY</link>'%(max(set(urls), key=urls.count))
         items2.append(Paragraph(link2, bodyStyle))
         f2 = Frame(inch * 24.1, inch * 13.37, inch * 12, inch * 2)
         f2.addFromList(items2, imgDoc)
 
         # first like
         items3 = []
-        link3 = '<link href=' + like + '>PLAY</link>'
+        link3 = '<link href=%s>PLAY</link>'%(like)
         items3.append(Paragraph(link3, bodyStyle))
         f3 = Frame(inch * 24.1, inch * 11.85, inch * 12, inch * 2)
         f3.addFromList(items3, imgDoc)
 
         # first comment
         items4 = []
-        link4 = '<link href=' + link + '>PLAY</link>'
+        link4 = '<link href=%s>PLAY</link>'%(link)
         items4.append(Paragraph(link4, bodyStyle))
         f4 = Frame(inch * 24.1, inch * 10.32, inch * 12, inch * 2)
         f4.addFromList(items4, imgDoc)
 
         # first search
         items4 = []
-        link4 = '<link href=''>' + str(re.sub('[^\w\s]', '', str(searchRaw[-1]))) + '</link>'
+        link4 = '<link href=''>%s</link>'%(re.sub('[^\w\s]', '', str(searchRaw[-1])))
         items4.append(Paragraph(link4, bodyStyle))
         f4 = Frame(inch * 22.7, inch * 8.77, inch * 12, inch * 2)
         f4.addFromList(items4, imgDoc)
