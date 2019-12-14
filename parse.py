@@ -15,13 +15,13 @@ likeHistory = os.path.join(Dir,'playlists/likes.json')
 
 
 class HTML:
-	with open(watchHistory, 'r', encoding='utf-8') as f:
-	    htmlWatch = f.read()
-	with open(searchHistory, 'r', encoding='utf-8') as f:
-	    htmlSearch = f.read()
+    with open(watchHistory, 'r', encoding='utf-8') as f:
+        htmlWatch = f.read()
+    with open(searchHistory, 'r', encoding='utf-8') as f:
+        htmlSearch = f.read()
     try:
-    	with open(commentHistory, 'r', encoding='utf-8') as f:
-	        htmlComment = f.read()
+        with open(commentHistory, 'r', encoding='utf-8') as f:
+            htmlComment = f.read()
     except: pass
 
     def find_links(self):
