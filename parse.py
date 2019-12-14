@@ -7,7 +7,7 @@ import itertools
 import collections
 
 
-Dir = os.path.join(os.getcwd(),"/Takeout/YouTube/")
+Dir = os.path.join(os.getcwd(),"Takeout/YouTube/")
 watchHistory = os.path.join(Dir,'history/watch-history.html')
 searchHistory = os.path.join(Dir,'history/search-history.html')
 commentHistory = os.path.join(Dir,'my-comments/my-comments.html')
