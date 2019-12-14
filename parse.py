@@ -18,7 +18,9 @@ class HTML:
 
     htmlWatch = open(watchHistory, 'r', encoding='utf-8').read()
     htmlSearch = open(searchHistory, 'r', encoding='utf-8').read()
-    htmlComment = open(commentHistory, 'r', encoding='utf-8').read()
+    try:
+        htmlComment = open(commentHistory, 'r', encoding='utf-8').read()
+    except: pass
 
     def find_links(self):
         # search all links based on your personal html file
