@@ -46,7 +46,7 @@ python report.py
 
 ### 7. Results
 
-The script will generate a HTML file named **YouTube_Report.pdf**. This file will automatically open in your browser once the script completes. Besides, you can find all the images that make up this report in **Images** folder.
+The script will generate a file named **YouTube_Report.pdf**. This file will automatically open in your browser once the script completes. Besides, you can find all the images that make up this report in **Images** folder.
 
 
 
