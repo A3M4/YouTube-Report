@@ -38,20 +38,28 @@ class HTML:
 
     def find_times(self):
         times = []
-        pattern = re.compile(r'\d{1,2}\s.{9}\s\d\d:\d\d:\d\d\sEST')
+        pattern = re.compile(r'(?:[A-Za-z]{3}\s\d{1,2}\,\s[0-9]{4}\,|\d{1,2}\s.{9})\s\d?\d:\d\d:\d\d\s(?:PM\s|AM\s)?[A-Z]{3,4}')
         matchList = pattern.findall(str(HTML.htmlWatch))
-
+ 
         # add '0' to the beginning of the string to make all string same length
         for time in matchList:
-            if len(time) == 24:
-                time = str(0) + time
-                # add the day of week to the end of strings
-                dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')
-                times.append(time + ' ' + dayOfWeek)
+            if time[0].isalpha():
+                if time[6] != ",":
+                    time = time[:4] + "0" + time[4:]               
+                dayOfWeek = datetime.datetime.strptime(time[0:12], '%b %d, %Y').strftime('%a')
+                time = time[:6] + time[7:]
+                dt = datetime.datetime.strptime(time[12:24].strip(), "%I:%M:%S %p")
+                times.append(time[:13] + dt.strftime("%H:%M:%S") + ' ' + time[-3:] + ' ' + dayOfWeek)
             else:
-                # add the day of week to the end of strings
-                dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')
-                times.append(time + ' ' + dayOfWeek)
+                if len(time) == 24:
+                    time = str(0) + time
+                    # add the day of week to the end of strings
+                    dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')
+                    times.append(time + ' ' + dayOfWeek)
+                else:
+                    # add the day of week to the end of strings
+                    dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')
+                    times.append(time + ' ' + dayOfWeek)
         return times
 
 
