@@ -6,13 +6,46 @@ import datetime
 import itertools
 import collections
 
-
+missing=[]
 Dir = os.path.join(os.getcwd(),"Takeout/YouTube/")
-watchHistory = os.path.join(Dir,'history/watch-history.html')
-searchHistory = os.path.join(Dir,'history/search-history.html')
-commentHistory = os.path.join(Dir,'my-comments/my-comments.html')
-likeHistory = os.path.join(Dir,'playlists/likes.json')
+if not os.path.exists(Dir):
+	missing.append(Dir)
+found=False
+for path in ('Verlauf/Wiedergabeverlauf.html','history/watch-history.html'):	#translations
+	watchHistory = os.path.join(Dir,path)
+	if os.path.exists(watchHistory):
+		found=True
+		break
+if not found:
+	missing.append(watchHistory)
+found=False
+for path in ('Verlauf/Suchverlauf.html','history/search-history.html'):	#translations
+	searchHistory = os.path.join(Dir,path)
+	if os.path.exists(searchHistory):
+		found=True
+		break
+if not found:
+	missing.append(searchHistory)
+found=False
+for path in ('Meine Kommentare/Meine Kommentare.html','my-comments/my-comments.html'):	#translations
+	commentsHistory = os.path.join(Dir,path)
+	if os.path.exists(commentsHistory):
+		found=True
+		break
+if not found:
+	missing.append(commentsHistory)
+found=False
+for path in ('Playlists/Positive Bewertungen.json','playlists/likes.json'):	#translations
+	likeHistory = os.path.join(Dir,path)
+	if os.path.exists(likeHistory):
+		found=True
+		break
+if not found:
+	missing.append(likeHistory)
+del found
 
+if len(missing)>0:
+	raise OSError("Required directories do not exist: %s"%(missing))
 
 
 class HTML:
@@ -28,21 +61,24 @@ class HTML:
     def find_links(self):
         # search all links based on your personal html file
         links = []
-        pattern = re.compile(r'Watched.<.*?>')
-        matchList = pattern.findall(str(HTML.htmlWatch))
+        #if you want to understand ↓these↓, go to regex101.com.
+        for translation in (r"""<a href=("[^<>"']*"|'[^<>"']*')[^<>"']?>[^<>"']*?<\/a> ?Watched""",r"""<a href=("[^<>"']*"|'[^<>"']*')[^<>"']?>[^<>"']*?<\/a> ?angesehen"""):
+        	links+=self.raw_find_links(translation)
+        return links
+    def raw_find_links(self,translation):
+        pattern = re.compile(translation)
+        matchList = pattern.findall(str(self.htmlWatch))
+        print(matchList)
+        quit()
 
         # save links into list
-        for match in matchList:
-            match = match.split('"')[1]
-            links.append(match)
-        return links
-
+        return [match.split('"')[1] for match in matchList]
 
 
     def find_times(self):
         times = []
         pattern = re.compile(r'\d{1,2}\s.{9}\s\d\d:\d\d:\d\d\sEST')
-        matchList = pattern.findall(str(HTML.htmlWatch))
+        matchList = pattern.findall(str(self.htmlWatch))
 
         # add '0' to the beginning of the string to make all string same length
         for time in matchList:
@@ -63,7 +99,7 @@ class HTML:
         searchRaw = []
         searchClean = []
         pattern = re.compile(r'search_query=[^%].*?>')
-        matchList = pattern.findall(str(HTML.htmlSearch))
+        matchList = pattern.findall(str(self.htmlSearch))
 
         # save links into list
         for match in matchList:
@@ -80,7 +116,7 @@ class HTML:
     def commentHistory(self):
         try:
             pattern = re.compile(r'<a href=".*?">')
-            matchList = pattern.findall(str(HTML.htmlComment))
+            matchList = pattern.findall(str(self.htmlComment))
             link = matchList[-1][9:][:-2]
             return link, matchList
         except:
