@@ -91,7 +91,7 @@ class Visualization:
         unique_string = (" ").join(searchClean)
         bg = np.array(Image.open(logo))
 
-        font = "arial" if sys.platform == "win32" else "Arial"
+        font = "arial" if sys.platform == "win32" else "DejaVuSansMono" if sys.platform == "linux" else  "Arial"
         wordcloud = WordCloud(mask=bg, background_color="white", colormap='Set2', font_path=font,
                               max_words=380,contour_width=2, prefer_horizontal=1).generate(unique_string)
 
