@@ -1,6 +1,7 @@
 import math
 import subprocess
 import sys
+import argparse
 
 import numpy as np
 import seaborn as sns
@@ -18,36 +19,36 @@ from PyPDF2 import PdfFileWriter, PdfFileReader
 from reportlab.lib.styles import ParagraphStyle
 
 
-
 image_dir = os.getcwd() + "/Images/"
 logo = image_dir + "LOGO.png"
-urls = HTML().find_links()
-searchRaw, searchClean = HTML().searchHistory()
-
-try:
-    link, allLinks = HTML().commentHistory()
-except TypeError:
-    link = allLinks = ''
-
-try:
-    like, allLikes = HTML().likeHistory()
-except FileNotFoundError:
-    like = allLikes = ''
 
 
 class Visualization:
 
+    def __init__(self, locale):
+        self.locale = locale
+        self.html = HTML(locale)
+        self.urls = self.html.find_links()
+        self.searchRaw, self.searchClean = self.html.searchHistory()
+        try:
+            self.link, self.allLinks = self.html.commentHistory()
+        except TypeError:
+            self.link = self.allLinks = ''
+
+        try:
+            self.like, self.allLikes = self.html.likeHistory()
+        except FileNotFoundError:
+            self.like = self.allLikes = ''
 
     def heat_map(self):
         print('Generating Heat Map.....')
-        html = HTML()
-        Mon = html.dataframe_heatmap('Mon')
-        Tue = html.dataframe_heatmap('Tue')
-        Wed = html.dataframe_heatmap('Wed')
-        Thu = html.dataframe_heatmap('Wed')
-        Fri = html.dataframe_heatmap('Fri')
-        Sat = html.dataframe_heatmap('Fri')
-        Sun = html.dataframe_heatmap('Sun')
+        Mon = self.html.dataframe_heatmap('Mon')
+        Tue = self.html.dataframe_heatmap('Tue')
+        Wed = self.html.dataframe_heatmap('Wed')
+        Thu = self.html.dataframe_heatmap('Wed')
+        Fri = self.html.dataframe_heatmap('Fri')
+        Sat = self.html.dataframe_heatmap('Fri')
+        Sun = self.html.dataframe_heatmap('Sun')
         df = np.vstack((Mon, Tue, Wed, Thu, Fri, Sat, Sun))
 
         print(df)
@@ -61,7 +62,7 @@ class Visualization:
                   fontsize=26, color='steelblue',fontweight="bold", fontname="Comic Sans MS")
 
         plt.annotate("             The plot above is based on a total of " +
-                     str(len(HTML().find_links())) +" videos you have watched",
+                     str(len(self.html.find_links())) +" videos you have watched",
                      (0, 0), (0, -20), fontsize=20, color='steelblue', fontweight="bold",
                      fontname="Comic Sans MS", xycoords='axes fraction', textcoords='offset points', va='top')
 
@@ -88,7 +89,7 @@ class Visualization:
 
     def wordCloud(self):
         print('Generating Word Cloud.....')
-        unique_string = (" ").join(searchClean)
+        unique_string = (" ").join(self.searchClean)
         bg = np.array(Image.open(logo))
 
         font = "arial" if sys.platform == "win32" else "Arial"
@@ -103,7 +104,7 @@ class Visualization:
                   fontsize=18, color='steelblue', fontweight="bold", fontname="Comic Sans MS")
 
         plt.annotate("   WordCloud is based on a total of " +
-                      str(len(searchClean)) + " search queries",
+                      str(len(self.searchClean)) + " search queries",
                      (0, 0), (-10, 10), fontsize=13, color='steelblue', fontweight="bold",
                      fontname="Comic Sans MS", xycoords='axes fraction', textcoords='offset points', va='top')
 
@@ -117,7 +118,7 @@ class Visualization:
         plt.figure(figsize=(10, 5))
         sns.set(style='white', font_scale=1.5)
         splot = sns.barplot(
-            x=[len(HTML().find_links()), len(searchClean), len(allLikes), len(allLinks)],
+            x=[len(self.html.find_links()), len(self.searchClean), len(self.allLikes), len(self.allLinks)],
             y=['Watch', 'Search', 'Like', 'Comment'], palette="Blues")
         for p in splot.patches:
             width = p.get_width()
@@ -136,7 +137,7 @@ class Visualization:
     def score(self):
         print('Caculating Your Activity Score.....')
         colors = ['#ff3300', '#33cc33']
-        scoreValue = round(math.log((len(urls)+len(searchClean*2)+len(allLikes*3)+len(allLinks*4))/9, 1.12), 1)
+        scoreValue = round(math.log((len(self.urls)+len(self.searchClean*2)+len(self.allLikes*3)+len(self.allLinks*4))/9, 1.12), 1)
         x_0 = [1, 0, 0, 0]
         pl.pie([100 - scoreValue, scoreValue], autopct='%1.1f%%', startangle=90, colors=colors, pctdistance=10)
         plt.pie(x_0, radius=0.7, colors='w')
@@ -199,35 +200,35 @@ class Visualization:
         # first watch
         bodyStyle = ParagraphStyle('Body', fontSize=31)
         items1 = []
-        link1 = '<link href='+urls[-1]+'>PLAY</link>'
+        link1 = '<link href='+self.urls[-1]+'>PLAY</link>'
         items1.append(Paragraph(link1, bodyStyle))
         f1 = Frame(inch*24.1, inch*14.89, inch*12, inch*2)
         f1.addFromList(items1, imgDoc)
 
         # most watch
         items2 = []
-        link2 = '<link href=' + max(set(urls), key=urls.count) + '>PLAY</link>'
+        link2 = '<link href=' + max(set(self.urls), key=self.urls.count) + '>PLAY</link>'
         items2.append(Paragraph(link2, bodyStyle))
         f2 = Frame(inch * 24.1, inch * 13.37, inch * 12, inch * 2)
         f2.addFromList(items2, imgDoc)
 
         # first like
         items3 = []
-        link3 = '<link href=' + like + '>PLAY</link>'
+        link3 = '<link href=' + self.like + '>PLAY</link>'
         items3.append(Paragraph(link3, bodyStyle))
         f3 = Frame(inch * 24.1, inch * 11.85, inch * 12, inch * 2)
         f3.addFromList(items3, imgDoc)
 
         # first comment
         items4 = []
-        link4 = '<link href=' + link + '>PLAY</link>'
+        link4 = '<link href=' + self.link + '>PLAY</link>'
         items4.append(Paragraph(link4, bodyStyle))
         f4 = Frame(inch * 24.1, inch * 10.32, inch * 12, inch * 2)
         f4.addFromList(items4, imgDoc)
 
         # first search
         items4 = []
-        link4 = '<link href=''>' + str(re.sub('[^\w\s]', '', str(searchRaw[-1]))) + '</link>'
+        link4 = '<link href=''>' + str(re.sub('[^\w\s]', '', str(self.searchRaw[-1]))) + '</link>'
         items4.append(Paragraph(link4, bodyStyle))
         f4 = Frame(inch * 22.7, inch * 8.77, inch * 12, inch * 2)
         f4.addFromList(items4, imgDoc)
@@ -243,10 +244,11 @@ class Visualization:
             subprocess.call([opener, "YouTube_Report.pdf"])
 
 
-
-
 if __name__ == "__main__":
-    visual = Visualization()
+    parser = argparse.ArgumentParser(description='Language of downloaded file')
+    parser.add_argument("language")
+    arg = parser.parse_args()
+    visual = Visualization(locale=arg.language)
     visual.heat_map()
     visual.table()
     visual.wordCloud()

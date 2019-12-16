@@ -1,0 +1,26 @@
+{
+  "english": {
+    "history": "history",
+    "my-comments": "my-comments",
+    "playlists": "playlists",
+    "watch-history": "watch-history",
+    "search-history": "search-history",
+    "likes": "likes",
+    "Watched": "Watched",
+    "time-regex": ",(?:[A-Za-z]{3}\\s\\d{1,2}\\,\\s[0-9]{4})\\s\\d{2}:\\d\\d:\\d\\d\\s?[A-Za-z]{2}\\s?[A-Z]{3}",
+    "months": {}
+  },
+  "danish": {
+    "history": "historik",
+    "my-comments": "mine kommentarer",
+    "playlists": "playlister",
+    "watch-history": "afspilningshistorik",
+    "search-history": "søgehistorik",
+    "likes": "kan lide",
+    "Watched": "Så",
+    "time-regex": "(?:\\d{1,2}\\.\\s[A-Za-z]{3}\\.\\s[0-9]{4})\\s\\d\\d.\\d\\d.\\d\\d\\s?[A-Z]{3,4}",
+    "months": {
+      "okt": "oct"
+    }
+  }
+}
