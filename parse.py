@@ -62,17 +62,16 @@ class HTML:
         # search all links based on your personal html file
         links = []
         #if you want to understand ↓these↓, go to regex101.com.
-        for translation in (r"""<a href=("[^<>"']*"|'[^<>"']*')[^<>"']?>[^<>"']*?<\/a> ?Watched""",r"""<a href=("[^<>"']*"|'[^<>"']*')[^<>"']?>[^<>"']*?<\/a> ?angesehen"""):
-        	links+=self.raw_find_links(translation)
+        #also, I just assumed that the previously written english regex was faulty too, but replace that one if needed. I've only got the german one on hand.
+        for translation in (r"""<a href=\"([^\"]*)\">[^<]*<\/a>\xa0watched""",r"""<a href=\"([^\"]*)\">[^<]*<\/a>\xa0angesehen"""):
+            links+=self.raw_find_links(translation)
         return links
     def raw_find_links(self,translation):
         pattern = re.compile(translation)
         matchList = pattern.findall(str(self.htmlWatch))
-        print(matchList)
-        quit()
 
         # save links into list
-        return [match.split('"')[1] for match in matchList]
+        return [match for match in matchList if type(match)==str]	#just sorting out stuff that could f up the whole script
 
 
     def find_times(self):
