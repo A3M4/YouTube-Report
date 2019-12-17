@@ -72,7 +72,7 @@ class HTML:
 
         # save links into list
         for match in matchList:
-            match = match[13:][:-3]
+            match = match[13:][:-2]
             match = match.split('+')
             searchRaw.append(match)
         for word in list(itertools.chain.from_iterable(searchRaw)):
