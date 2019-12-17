@@ -130,3 +130,5 @@ dmypy.json
 # Self data
 Images/
 YouTube_Report.pdf
+!Images/LOGO.png
+!Images/red.png
