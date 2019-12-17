@@ -126,3 +126,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Self data
+Images/
+YouTube_Report.pdf
+!Images/LOGO.png
+!Images/red.png
