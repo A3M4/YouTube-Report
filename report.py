@@ -64,7 +64,7 @@ class Visualization:
                      (0, 0), (0, -20), fontsize=20, color='steelblue', fontweight="bold",
                      fontname="Arial", xycoords='axes fraction', textcoords='offset points', va='top')
 
-        plt.savefig(image_dir + 'week_heatmap.png', dpi=900)
+        plt.savefig(image_dir + 'week_heatmap.png', dpi=400)
         plt.clf()
 
 
@@ -80,7 +80,7 @@ class Visualization:
                      fontname="Arial", xycoords='axes fraction', textcoords='offset points', va='top')
 
         plt.axis('off')
-        plt.savefig(image_dir + 'memory.png', dpi=900)
+        plt.savefig(image_dir + 'memory.png', dpi=400)
         plt.clf()
 
 
@@ -89,7 +89,7 @@ class Visualization:
         print('Generating Word Cloud.....')
         unique_string = (" ").join(searchClean)
         bg = np.array(Image.open(logo))
-        stop_words = ["porn", "nigga", "pussy",'brock','chinese','china']
+        stop_words = ["porn", "nigga", "pussy"]
         font = "arial" if sys.platform == "win32" else "DejaVuSansMono" if sys.platform == "linux" else "Arial"
         wordcloud = WordCloud(stopwords=stop_words, mask=bg, background_color="white", colormap='Set2', font_path=font,
                               max_words=380, contour_width=2, prefer_horizontal=1).generate(unique_string)
@@ -106,7 +106,7 @@ class Visualization:
                      (0, 0), (-10, 10), fontsize=13, color='steelblue', fontweight="bold",
                      fontname="Arial", xycoords='axes fraction', textcoords='offset points', va='top')
 
-        plt.savefig(image_dir + 'word_cloud.png', dpi=900)
+        plt.savefig(image_dir + 'word_cloud.png', dpi=400)
         plt.clf()
 
 
@@ -127,7 +127,7 @@ class Visualization:
         splot.grid(False)
         plt.title("Breakdown of Your Activity on Youtube",
                   fontsize=24, color='steelblue', fontweight="bold", fontname="Arial")
-        plt.savefig(image_dir + 'bar.png', dpi=900)
+        plt.savefig(image_dir + 'bar.png', dpi=400)
         plt.clf()
 
 
@@ -147,7 +147,7 @@ class Visualization:
         plt.annotate(scoreValue,
                      (0, 0), (123, 154), fontsize=54, color='teal', fontweight="bold",
                      fontname="Arial", xycoords='axes fraction', textcoords='offset points', va='top')
-        plt.savefig(image_dir + 'score.png', dpi=900)
+        plt.savefig(image_dir + 'score.png', dpi=400)
         plt.clf()
 
 
