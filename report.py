@@ -99,7 +99,7 @@ class Visualization:
         plt.axis("off")
         # plt.savefig("your_file_name"+".png", bbox_inches='tight')
         plt.title("What Do You Usually Search on YouTube?",
-                  fontsize=19, color='steelblue', fontweight="bold", fontname="Arial")
+                  fontsize=18, color='steelblue', fontweight="bold", fontname="Arial")
 
         plt.annotate("   WordCloud is based on a total of " +
                       str(len(searchClean)) + " search queries",
@@ -170,7 +170,7 @@ class Visualization:
         # heat map x, y - start position
         imgDoc.drawImage(path1, -150, 1400, width=2600,height=650)
         # memory
-        imgDoc.drawImage(path2, 1070, 678, width=697, height=667)
+        imgDoc.drawImage(path2, 1070, 681, width=697, height=667)
         # word_cloud
         imgDoc.drawImage(path3, -28, 592, width=1100, height=767)
         # score
