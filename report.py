@@ -57,12 +57,12 @@ class Visualization:
         sns.heatmap(df, cmap='Blues', linewidths=2, xticklabels=Cols,yticklabels=Index)
 
         plt.title("What Time Do You Usually Watch Youtube Videos? (Eastern Standard Time)",
-                  fontsize=26, color='steelblue',fontweight="bold", fontname="Comic Sans MS")
+                  fontsize=26, color='steelblue',fontweight="bold", fontname="Arial")
 
         plt.annotate("             The plot above is based on a total of " +
                      str(len(HTML().find_links())) +" videos you have watched",
                      (0, 0), (0, -20), fontsize=20, color='steelblue', fontweight="bold",
-                     fontname="Comic Sans MS", xycoords='axes fraction', textcoords='offset points', va='top')
+                     fontname="Arial", xycoords='axes fraction', textcoords='offset points', va='top')
 
         plt.savefig(image_dir + 'week_heatmap.png', dpi=400)
         plt.clf()
@@ -72,12 +72,12 @@ class Visualization:
     def table(self):
         plt.figure(figsize=(6, 6))
         plt.title("Do You Still Remember?",
-                  fontsize=27, color='steelblue', fontweight="bold", fontname="Comic Sans MS")
+                  fontsize=27, color='steelblue', fontweight="bold", fontname="Arial")
 
-        plt.annotate("First Watched Video:\n\nMost Watched Video:\n\nFirst Like"
+        plt.annotate("First Watched Video: \n\nMost Watched Video:\n\nFirst Like"
                      "d Video:\n\nFirst Commented Video:\n\nFirst Searched Words:",
-                     (0, 0), (-35, 298), fontsize=29, color='k', fontweight="bold",
-                     fontname="Comic Sans MS", xycoords='axes fraction', textcoords='offset points', va='top')
+                     (0, 0), (-35, 298), fontsize=34, color='k', fontweight="bold",
+                     fontname="Arial", xycoords='axes fraction', textcoords='offset points', va='top')
 
         plt.axis('off')
         plt.savefig(image_dir + 'memory.png', dpi=400)
@@ -89,22 +89,22 @@ class Visualization:
         print('Generating Word Cloud.....')
         unique_string = (" ").join(searchClean)
         bg = np.array(Image.open(logo))
-
-        font = "arial" if sys.platform == "win32" else "DejaVuSansMono" if sys.platform == "linux" else  "Arial"
-        wordcloud = WordCloud(mask=bg, background_color="white", colormap='Set2', font_path=font,
-                              max_words=380,contour_width=2, prefer_horizontal=1).generate(unique_string)
+        stop_words = ["porn", "nigga", "pussy"]
+        font = "arial" if sys.platform == "win32" else "DejaVuSansMono" if sys.platform == "linux" else "Arial"
+        wordcloud = WordCloud(stopwords=stop_words, mask=bg, background_color="white", colormap='Set2', font_path=font,
+                              max_words=380, contour_width=2, prefer_horizontal=1).generate(unique_string)
 
         plt.figure()
         plt.imshow(wordcloud)
         plt.axis("off")
         # plt.savefig("your_file_name"+".png", bbox_inches='tight')
         plt.title("What Do You Usually Search on YouTube?",
-                  fontsize=18, color='steelblue', fontweight="bold", fontname="Comic Sans MS")
+                  fontsize=19, color='steelblue', fontweight="bold", fontname="Arial")
 
         plt.annotate("   WordCloud is based on a total of " +
                       str(len(searchClean)) + " search queries",
                      (0, 0), (-10, 10), fontsize=13, color='steelblue', fontweight="bold",
-                     fontname="Comic Sans MS", xycoords='axes fraction', textcoords='offset points', va='top')
+                     fontname="Arial", xycoords='axes fraction', textcoords='offset points', va='top')
 
         plt.savefig(image_dir + 'word_cloud.png', dpi=400)
         plt.clf()
@@ -126,7 +126,7 @@ class Visualization:
                 ha="left")
         splot.grid(False)
         plt.title("Breakdown of Your Activity on Youtube",
-                  fontsize=24, color='steelblue', fontweight="bold", fontname="Comic Sans MS")
+                  fontsize=24, color='steelblue', fontweight="bold", fontname="Arial")
         plt.savefig(image_dir + 'bar.png', dpi=400)
         plt.clf()
 
@@ -142,11 +142,11 @@ class Visualization:
         plt.axis('equal')
 
         plt.title("Your YouTube Activity Score",
-                  fontsize=21, color='steelblue', fontweight="bold", fontname="Comic Sans MS")
+                  fontsize=21, color='steelblue', fontweight="bold", fontname="Arial")
 
         plt.annotate(scoreValue,
                      (0, 0), (115, 154), fontsize=54, color='teal', fontweight="bold",
-                     fontname="Comic Sans MS", xycoords='axes fraction', textcoords='offset points', va='top')
+                     fontname="Arial", xycoords='axes fraction', textcoords='offset points', va='top')
         plt.savefig(image_dir + 'score.png', dpi=400)
         plt.clf()
 
@@ -180,10 +180,10 @@ class Visualization:
         # logo
         imgDoc.drawImage(logo, 99, 2068, width=105, height=80)
         # red square
-        imgDoc.drawImage(path6, inch * 24.1, inch * 16.25, width=91, height=45)
-        imgDoc.drawImage(path6, inch * 24.1, inch * 14.73, width=91, height=45)
-        imgDoc.drawImage(path6, inch * 24.1, inch * 13.21, width=91, height=45)
-        imgDoc.drawImage(path6, inch * 24.1, inch * 11.69, width=91, height=45)
+        imgDoc.drawImage(path6, inch * 24.3, inch * 16.25, width=91, height=45)
+        imgDoc.drawImage(path6, inch * 24.3, inch * 14.69, width=91, height=45)
+        imgDoc.drawImage(path6, inch * 24.3, inch * 13.14, width=91, height=45)
+        imgDoc.drawImage(path6, inch * 24.3, inch * 11.60, width=91, height=45)
 
 
         # draw three lines, x,y,width,height
@@ -200,35 +200,35 @@ class Visualization:
         items1 = []
         link1 = '<link href='+urls[-1]+'>PLAY</link>'
         items1.append(Paragraph(link1, bodyStyle))
-        f1 = Frame(inch*24.1, inch*14.89, inch*12, inch*2)
+        f1 = Frame(inch * 24.3, inch * 14.88, inch * 12, inch * 2)
         f1.addFromList(items1, imgDoc)
 
         # most watch
         items2 = []
         link2 = '<link href=' + max(set(urls), key=urls.count) + '>PLAY</link>'
         items2.append(Paragraph(link2, bodyStyle))
-        f2 = Frame(inch * 24.1, inch * 13.37, inch * 12, inch * 2)
+        f2 = Frame(inch * 24.3, inch * 13.34, inch * 12, inch * 2)
         f2.addFromList(items2, imgDoc)
 
         # first like
         items3 = []
         link3 = '<link href=' + like + '>PLAY</link>'
         items3.append(Paragraph(link3, bodyStyle))
-        f3 = Frame(inch * 24.1, inch * 11.85, inch * 12, inch * 2)
+        f3 = Frame(inch * 24.3, inch * 11.79, inch * 12, inch * 2)
         f3.addFromList(items3, imgDoc)
 
         # first comment
         items4 = []
         link4 = '<link href=' + link + '>PLAY</link>'
         items4.append(Paragraph(link4, bodyStyle))
-        f4 = Frame(inch * 24.1, inch * 10.32, inch * 12, inch * 2)
+        f4 = Frame(inch * 24.3, inch * 10.25, inch * 12, inch * 2)
         f4.addFromList(items4, imgDoc)
 
         # first search
         items4 = []
         link4 = '<link href=''>' + str(re.sub('[^\w\s]', '', str(searchRaw[-1]))) + '</link>'
         items4.append(Paragraph(link4, bodyStyle))
-        f4 = Frame(inch * 22.7, inch * 8.77, inch * 12, inch * 2)
+        f4 = Frame(inch * 23.7, inch * 8.71, inch * 12, inch * 2)
         f4.addFromList(items4, imgDoc)
 
         imgDoc.save()
@@ -246,9 +246,9 @@ class Visualization:
 
 if __name__ == "__main__":
     visual = Visualization()
-    visual.heat_map()
+    #visual.heat_map()
     visual.table()
-    visual.wordCloud()
-    visual.score()
-    visual.bar()
+    #visual.wordCloud()
+    #visual.score()
+    #visual.bar()
     visual.gen_pdf()
