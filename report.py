@@ -57,14 +57,14 @@ class Visualization:
         sns.heatmap(df, cmap='Blues', linewidths=2, xticklabels=Cols,yticklabels=Index)
 
         plt.title("What Time Do You Usually Watch Youtube Videos? (Eastern Standard Time)",
-                  fontsize=26, color='steelblue',fontweight="bold", fontname="Arial")
+                  fontsize=27, color='steelblue',fontweight="bold", fontname="Arial")
 
         plt.annotate("             The plot above is based on a total of " +
                      str(len(HTML().find_links())) +" videos you have watched",
                      (0, 0), (0, -20), fontsize=20, color='steelblue', fontweight="bold",
                      fontname="Arial", xycoords='axes fraction', textcoords='offset points', va='top')
 
-        plt.savefig(image_dir + 'week_heatmap.png', dpi=400)
+        plt.savefig(image_dir + 'week_heatmap.png', dpi=900)
         plt.clf()
 
 
@@ -80,7 +80,7 @@ class Visualization:
                      fontname="Arial", xycoords='axes fraction', textcoords='offset points', va='top')
 
         plt.axis('off')
-        plt.savefig(image_dir + 'memory.png', dpi=400)
+        plt.savefig(image_dir + 'memory.png', dpi=900)
         plt.clf()
 
 
@@ -89,7 +89,7 @@ class Visualization:
         print('Generating Word Cloud.....')
         unique_string = (" ").join(searchClean)
         bg = np.array(Image.open(logo))
-        stop_words = ["porn", "nigga", "pussy"]
+        stop_words = ["porn", "nigga", "pussy",'brock','chinese','china']
         font = "arial" if sys.platform == "win32" else "DejaVuSansMono" if sys.platform == "linux" else "Arial"
         wordcloud = WordCloud(stopwords=stop_words, mask=bg, background_color="white", colormap='Set2', font_path=font,
                               max_words=380, contour_width=2, prefer_horizontal=1).generate(unique_string)
@@ -101,12 +101,12 @@ class Visualization:
         plt.title("What Do You Usually Search on YouTube?",
                   fontsize=18, color='steelblue', fontweight="bold", fontname="Arial")
 
-        plt.annotate("   WordCloud is based on a total of " +
+        plt.annotate("      WordCloud is based on a total of " +
                       str(len(searchClean)) + " search queries",
                      (0, 0), (-10, 10), fontsize=13, color='steelblue', fontweight="bold",
                      fontname="Arial", xycoords='axes fraction', textcoords='offset points', va='top')
 
-        plt.savefig(image_dir + 'word_cloud.png', dpi=400)
+        plt.savefig(image_dir + 'word_cloud.png', dpi=900)
         plt.clf()
 
 
@@ -127,7 +127,7 @@ class Visualization:
         splot.grid(False)
         plt.title("Breakdown of Your Activity on Youtube",
                   fontsize=24, color='steelblue', fontweight="bold", fontname="Arial")
-        plt.savefig(image_dir + 'bar.png', dpi=400)
+        plt.savefig(image_dir + 'bar.png', dpi=900)
         plt.clf()
 
 
@@ -145,9 +145,9 @@ class Visualization:
                   fontsize=21, color='steelblue', fontweight="bold", fontname="Arial")
 
         plt.annotate(scoreValue,
-                     (0, 0), (115, 154), fontsize=54, color='teal', fontweight="bold",
+                     (0, 0), (123, 154), fontsize=54, color='teal', fontweight="bold",
                      fontname="Arial", xycoords='axes fraction', textcoords='offset points', va='top')
-        plt.savefig(image_dir + 'score.png', dpi=400)
+        plt.savefig(image_dir + 'score.png', dpi=900)
         plt.clf()
 
 
@@ -172,9 +172,9 @@ class Visualization:
         # memory
         imgDoc.drawImage(path2, 1070, 681, width=697, height=667)
         # word_cloud
-        imgDoc.drawImage(path3, -28, 592, width=1100, height=767)
+        imgDoc.drawImage(path3, -28, 585, width=1100, height=778)
         # score
-        imgDoc.drawImage(path5, 1128, -57, width=894, height=672)
+        imgDoc.drawImage(path5, 1128, -59, width=894, height=672)
         # bar
         imgDoc.drawImage(path4, 0, -11, width=1286, height=620)
         # logo
@@ -228,7 +228,7 @@ class Visualization:
         items4 = []
         link4 = '<link href=''>' + str(re.sub('[^\w\s]', '', str(searchRaw[-1]))) + '</link>'
         items4.append(Paragraph(link4, bodyStyle))
-        f4 = Frame(inch * 23.7, inch * 8.71, inch * 12, inch * 2)
+        f4 = Frame(inch * 23.7, inch * 8.73, inch * 12, inch * 2)
         f4.addFromList(items4, imgDoc)
 
         imgDoc.save()
