@@ -246,9 +246,9 @@ class Visualization:
 
 if __name__ == "__main__":
     visual = Visualization()
-    #visual.heat_map()
+    visual.heat_map()
     visual.table()
-    #visual.wordCloud()
-    #visual.score()
-    #visual.bar()
+    visual.wordCloud()
+    visual.score()
+    visual.bar()
     visual.gen_pdf()
