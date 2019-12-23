@@ -39,9 +39,7 @@ class HTML:
             links.append(match)
         return links
 
-
-
-    def find_times(self):
+    def _find_times(self):
         times = []
         pattern = re.compile(
             r"(?:[A-Za-z]{3}\s\d{1,2}\,\s[0-9]{4}\,|\d{1,2}\s.{9})\s\d?\d:\d\d:\d\d\s(?:PM\s|AM\s)?[A-Z]{3,4}"
