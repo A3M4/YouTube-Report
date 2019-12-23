@@ -5,6 +5,11 @@ import json
 import os
 import re
 
+dir = os.getcwd() + "/Takeout/YouTube/"
+watch_history = dir + "history/watch-history.html"
+search_history = dir + "history/search-history.html"
+comment_history = dir + "my-comments/my-comments.html"
+like_history = dir + "playlists/likes.json"
 
 Dir = os.getcwd() + "/Takeout/YouTube/"
 watchHistory = Dir + 'history/watch-history.html'
@@ -16,8 +21,8 @@ likeHistory = Dir + 'playlists/likes.json'
 
 class HTML:
 
-    htmlWatch = open(watchHistory, 'r', encoding='utf-8').read()
-    htmlSearch = open(searchHistory, 'r', encoding='utf-8').read()
+    html_watch = open(watch_history, "r", encoding="utf-8").read()
+    html_search = open(search_history, "r", encoding="utf-8").read()
     try:
         htmlComment = open(commentHistory, 'r', encoding='utf-8').read()
     except: pass
@@ -25,11 +30,11 @@ class HTML:
     def find_links(self):
         # search all links based on your personal html file
         links = []
-        pattern = re.compile(r'Watched.<.*?>')
-        matchList = pattern.findall(str(HTML.htmlWatch))
+        pattern = re.compile(r"Watched.<.*?>")
+        match_list = pattern.findall(str(HTML.html_watch))
 
         # save links into list
-        for match in matchList:
+        for match in match_list:
             match = match.split('"')[1]
             links.append(match)
         return links
@@ -38,30 +43,50 @@ class HTML:
 
     def find_times(self):
         times = []
-        pattern = re.compile(r'(?:[A-Za-z]{3}\s\d{1,2}\,\s[0-9]{4}\,|\d{1,2}\s.{9})\s\d?\d:\d\d:\d\d\s(?:PM\s|AM\s)?[A-Z]{3,4}')
-        matchList = pattern.findall(str(HTML.htmlWatch))
- 
+        pattern = re.compile(
+            r"(?:[A-Za-z]{3}\s\d{1,2}\,\s[0-9]{4}\,|\d{1,2}\s.{9})\s\d?\d:\d\d:\d\d\s(?:PM\s|AM\s)?[A-Z]{3,4}"
+        )
+        match_list = pattern.findall(str(HTML.html_watch))
+
         # add '0' to the beginning of the string to make all string same length
-        for time in matchList:
+        for time in match_list:
             if time[0].isalpha():
                 if time[6] != ",":
                     time = time[:4] + "0" + time[4:]               
-                dayOfWeek = datetime.datetime.strptime(time[0:12], '%b %d, %Y').strftime('%a')
+                day_of_week = datetime.datetime.strptime(
+                    time[0:12], "%b %d, %Y"
+                ).strftime("%a")
                 time = time[:6] + time[7:]
                 dt = datetime.datetime.strptime(time[12:24].strip(), "%I:%M:%S %p")
-                times.append(time[:13] + dt.strftime("%H:%M:%S") + ' ' + time[-3:] + ' ' + dayOfWeek)
+                times.append(
+                    time[:13]
+                    + dt.strftime("%H:%M:%S")
+                    + " "
+                    + time[-3:]
+                    + " "
+                    + day_of_week
+                )
             else:
                 if len(time) == 24:
                     time = str(0) + time
                     # add the day of week to the end of strings
-                    dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')
-                    times.append(time + ' ' + dayOfWeek)
+                    day_of_week = datetime.datetime.strptime(
+                        time[0:11], "%d %b %Y"
+                    ).strftime("%a")
+                    times.append(time + " " + day_of_week)
                 else:
                     # add the day of week to the end of strings
-                    dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')
-                    times.append(time + ' ' + dayOfWeek)
+                    day_of_week = datetime.datetime.strptime(
+                        time[0:11], "%d %b %Y"
+                    ).strftime("%a")
+                    times.append(time + " " + day_of_week)
         return times
 
+    def search_history(self):
+        search_raw = []
+        search_clean = []
+        pattern = re.compile(r"search_query=[^%].*?>")
+        match_list = pattern.findall(str(HTML.html_search))
 
 
     def searchHistory(self):
@@ -71,46 +96,40 @@ class HTML:
         matchList = pattern.findall(str(HTML.htmlSearch))
 
         # save links into list
-        for match in matchList:
+        for match in match_list:
             match = match[13:][:-2]
-            match = match.split('+')
-            searchRaw.append(match)
-        for word in list(itertools.chain.from_iterable(searchRaw)):
-            if '%' not in word:
-                searchClean.append(word)
-        return searchRaw, searchClean
+            match = match.split("+")
+            search_raw.append(match)
+        for word in list(itertools.chain.from_iterable(search_raw)):
+            if "%" not in word:
+                search_clean.append(word)
+        return search_raw, search_clean
 
-
-
-    def commentHistory(self):
+    def comment_history(self):
         try:
             pattern = re.compile(r'<a href=".*?">')
-            matchList = pattern.findall(str(HTML.htmlComment))
-            link = matchList[-1][9:][:-2]
-            return link, matchList
-        except:
+            match_list = pattern.findall(str(HTML.html_comment))
+            link = match_list[-1][9:][:-2]
+            return link, match_list
+        except Exception:
             pass
 
-
-
-    def likeHistory(self):
-        with open(likeHistory, 'rb') as f:
+    def like_history(self):
+        with open(like_history, "rb") as f:
             data = json.load(f)
-            pattern = re.compile(r'videoId.{15}')
-            matchList = pattern.findall(str(data))
-            link = r"https://www.youtube.com/watch?v=" + matchList[-1][11:]
-            return link, matchList
+            pattern = re.compile(r"videoId.{15}")
+            match_list = pattern.findall(str(data))
+            link = r"https://www.youtube.com/watch?v=" + match_list[-1][11:]
+            return link, match_list
 
-
-
-    def dataframe_heatmap(self,day):
-        timeWeeks = []
-        daytime = []
-        times = self.find_times()
+    def dataframe_heatmap(self, day):
+        time_weeks = []
+        day_time = []
+        times = self._find_times()
         for time in times:
-            timeWeek = time[-3:]+time[13:15]
-            timeWeeks.append(timeWeek)
-        freq = collections.Counter(timeWeeks)
+            time_week = time[-3:] + time[13:15]
+            time_weeks.append(time_week)
+        freq = collections.Counter(time_weeks)
         for k, v in freq.items():
             if k[0:3] == day:
                 daytime.append(str(k)+' '+str(v))

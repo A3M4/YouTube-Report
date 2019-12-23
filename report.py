@@ -30,17 +30,17 @@ from parse import HTML
 image_dir = os.getcwd() + "/Images/"
 logo = image_dir + "LOGO.png"
 urls = HTML().find_links()
-searchRaw, searchClean = HTML().searchHistory()
+search_raw, search_clean = HTML().search_history()
 
 try:
-    link, allLinks = HTML().commentHistory()
+    link, all_links = HTML().comment_history()
 except TypeError:
-    link = allLinks = ''
+    link = all_links = ""
 
 try:
-    like, allLikes = HTML().likeHistory()
+    like, all_likes = HTML().like_history()
 except FileNotFoundError:
-    like = allLikes = ''
+    like = all_likes = ""
 
 
 class Visualization:
