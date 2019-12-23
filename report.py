@@ -43,9 +43,9 @@ class Visualization:
         Mon = html.dataframe_heatmap('Mon')
         Tue = html.dataframe_heatmap('Tue')
         Wed = html.dataframe_heatmap('Wed')
-        Thu = html.dataframe_heatmap('Wed')
+        Thu = html.dataframe_heatmap('Thu')
         Fri = html.dataframe_heatmap('Fri')
-        Sat = html.dataframe_heatmap('Fri')
+        Sat = html.dataframe_heatmap('Sat')
         Sun = html.dataframe_heatmap('Sun')
         df = np.vstack((Mon, Tue, Wed, Thu, Fri, Sat, Sun))
 
