@@ -24,8 +24,9 @@ class HTML:
     html_watch = open(watch_history, "r", encoding="utf-8").read()
     html_search = open(search_history, "r", encoding="utf-8").read()
     try:
-        htmlComment = open(commentHistory, 'r', encoding='utf-8').read()
-    except: pass
+        html_comment = open(comment_history, "r", encoding="utf-8").read()
+    except Exception:
+        print("Could not parse comments.")
 
     def find_links(self):
         # search all links based on your personal html file
