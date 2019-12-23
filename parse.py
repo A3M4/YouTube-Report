@@ -1,9 +1,9 @@
-import re
-import os
-import json
+import collections
 import datetime
 import itertools
-import collections
+import json
+import os
+import re
 
 
 Dir = os.getcwd() + "/Takeout/YouTube/"

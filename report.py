@@ -1,6 +1,12 @@
 import sys
 import math
+import os
+import re
 import subprocess
+import sys
+from io import BytesIO
+
+import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -10,12 +16,15 @@ from PIL import Image
 from io import BytesIO
 from wordcloud import WordCloud
 from matplotlib import pylab as pl
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.platypus import Paragraph, Frame
-from PyPDF2 import PdfFileWriter, PdfFileReader
+from PIL import Image
+from PyPDF2 import PdfFileReader, PdfFileWriter
 from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.pdfgen import canvas
+from reportlab.platypus import Frame, Paragraph
+from wordcloud import WordCloud
 
+from parse import HTML
 
 
 image_dir = os.getcwd() + "/Images/"
