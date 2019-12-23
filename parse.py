@@ -11,13 +11,6 @@ search_history = dir + "history/search-history.html"
 comment_history = dir + "my-comments/my-comments.html"
 like_history = dir + "playlists/likes.json"
 
-Dir = os.getcwd() + "/Takeout/YouTube/"
-watchHistory = Dir + 'history/watch-history.html'
-searchHistory = Dir + 'history/search-history.html'
-commentHistory = Dir + 'my-comments/my-comments.html'
-likeHistory = Dir + 'playlists/likes.json'
-
-
 
 class HTML:
 
@@ -51,7 +44,7 @@ class HTML:
         for time in match_list:
             if time[0].isalpha():
                 if time[6] != ",":
-                    time = time[:4] + "0" + time[4:]               
+                    time = time[:4] + "0" + time[4:]
                 day_of_week = datetime.datetime.strptime(
                     time[0:12], "%b %d, %Y"
                 ).strftime("%a")
@@ -86,13 +79,6 @@ class HTML:
         search_clean = []
         pattern = re.compile(r"search_query=[^%].*?>")
         match_list = pattern.findall(str(HTML.html_search))
-
-
-    def searchHistory(self):
-        searchRaw = []
-        searchClean = []
-        pattern = re.compile(r'search_query=[^%].*?>')
-        matchList = pattern.findall(str(HTML.htmlSearch))
 
         # save links into list
         for match in match_list:
@@ -131,14 +117,14 @@ class HTML:
         freq = collections.Counter(time_weeks)
         for k, v in freq.items():
             if k[0:3] == day:
-                daytime.append(str(k)+' '+str(v))
-        daytime.sort(key=lambda x: int(str(x)[3:5]))
-        print(daytime)
+                day_time.append(str(k) + " " + str(v))
+        day_time.sort(key=lambda x: int(str(x)[3:5]))
+        print(day_time)
 
         zero_one = 0
         two_three = 0
         four_five = 0
-        six_seven= 0
+        six_seven = 0
         eight_nine = 0
         ten_eleven = 0
         twelve_thirteen = 0
@@ -147,46 +133,44 @@ class HTML:
         eighteen_nineteen = 0
         twenty_twentyone = 0
         twentytwo_twentythree = 0
-
-        for i in daytime:
-            if int(i[3:5]) in range(0, 2):
-                zero_one = zero_one + int(i.split(' ')[1])
-            elif int(i[3:5]) in range(2, 4):
-                two_three = two_three + int(i.split(' ')[1])
-            elif int(i[3:5]) in range(4, 6):
-                four_five = four_five + int(i.split(' ')[1])
-            elif int(i[3:5]) in range(6, 8):
-                six_seven = six_seven + int(i.split(' ')[1])
-            elif int(i[3:5]) in range(8, 10):
-                eight_nine = eight_nine + int(i.split(' ')[1])
-            elif int(i[3:5]) in range(10, 12):
-                ten_eleven = ten_eleven + int(i.split(' ')[1])
-            elif int(i[3:5]) in range(12, 14):
-                twelve_thirteen = twelve_thirteen + int(i.split(' ')[1])
-            elif int(i[3:5]) in range(14, 16):
-                fourteen_fifteen = fourteen_fifteen + int(i.split(' ')[1])
-            elif int(i[3:5]) in range(16, 18):
-                sixteen_seventeen = sixteen_seventeen + int(i.split(' ')[1])
-            elif int(i[3:5]) in range(18, 20):
-                eighteen_nineteen = eighteen_nineteen + int(i.split(' ')[1])
-            elif int(i[3:5]) in range(20, 22):
-                twenty_twentyone = twenty_twentyone + int(i.split(' ')[1])
+        for i in day_time:
+            dt = int(i[3:5])
+            if dt in range(0, 2):
+                zero_one = zero_one + int(i.split(" ")[1])
+            elif dt in range(2, 4):
+                two_three = two_three + int(i.split(" ")[1])
+            elif dt in range(4, 6):
+                four_five = four_five + int(i.split(" ")[1])
+            elif dt in range(6, 8):
+                six_seven = six_seven + int(i.split(" ")[1])
+            elif dt in range(8, 10):
+                eight_nine = eight_nine + int(i.split(" ")[1])
+            elif dt in range(10, 12):
+                ten_eleven = ten_eleven + int(i.split(" ")[1])
+            elif dt in range(12, 14):
+                twelve_thirteen = twelve_thirteen + int(i.split(" ")[1])
+            elif dt in range(14, 16):
+                fourteen_fifteen = fourteen_fifteen + int(i.split(" ")[1])
+            elif dt in range(16, 18):
+                sixteen_seventeen = sixteen_seventeen + int(i.split(" ")[1])
+            elif dt in range(18, 20):
+                eighteen_nineteen = eighteen_nineteen + int(i.split(" ")[1])
+            elif dt in range(20, 22):
+                twenty_twentyone = twenty_twentyone + int(i.split(" ")[1])
             else:
-                twentytwo_twentythree = twentytwo_twentythree + int(i.split(' ')[1])
+                twentytwo_twentythree = twentytwo_twentythree + int(i.split(" ")[1])
 
-        return ([zero_one, two_three, four_five, six_seven, eight_nine, ten_eleven, twelve_thirteen, fourteen_fifteen,
-                 sixteen_seventeen, eighteen_nineteen, twenty_twentyone, twentytwo_twentythree])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return [
+            zero_one,
+            two_three,
+            four_five,
+            six_seven,
+            eight_nine,
+            ten_eleven,
+            twelve_thirteen,
+            fourteen_fifteen,
+            sixteen_seventeen,
+            eighteen_nineteen,
+            twenty_twentyone,
+            twentytwo_twentythree,
+        ]
