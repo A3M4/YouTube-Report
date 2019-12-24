@@ -329,14 +329,14 @@ class Visualization:
         f4.addFromList(items4, img_doc)
 
         # first search
-        items4 = []
-        link4 = (
+        items5 = []
+        link5 = (
             "<link href="
             ">" + str(re.sub("[^\w\s]", "", str(search_raw[-1]))) + "</link>"
         )
-        items4.append(Paragraph(link4, body_style))
-        f4 = Frame(inch * 23.7, inch * 8.73, inch * 12, inch * 2)
-        f4.addFromList(items4, img_doc)
+        items5.append(Paragraph(link5, body_style))
+        f5 = Frame(inch * 23.7, inch * 8.73, inch * 12, inch * 2)
+        f5.addFromList(items5, img_doc)
 
         img_doc.save()
         pdf.addPage(PdfFileReader(BytesIO(img_temp.getvalue())).getPage(0))
