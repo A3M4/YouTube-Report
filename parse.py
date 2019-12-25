@@ -1,9 +1,10 @@
 import collections
-import datetime
 import itertools
 import json
 import os
 import re
+
+from dateutil import parser
 
 dir = os.getcwd() + "/Takeout/YouTube/"
 watch_history = dir + "history/watch-history.html"
@@ -13,7 +14,6 @@ like_history = dir + "playlists/likes.json"
 
 
 class HTML:
-
     html_watch = open(watch_history, "r", encoding="utf-8").read()
     html_search = open(search_history, "r", encoding="utf-8").read()
     try:
@@ -34,44 +34,12 @@ class HTML:
         return links
 
     def _find_times(self):
-        times = []
-        pattern = re.compile(
-            r"(?:[A-Za-z]{3}\s\d{1,2}\,\s[0-9]{4}\,|\d{1,2}\s.{9})\s\d?\d:\d\d:\d\d\s(?:PM\s|AM\s)?[A-Z]{3,4}"
-        )
+        pattern = re.compile(r'(?<=<br>)([^>]*)(?=</div><div )') # Match any kind of date format
         match_list = pattern.findall(str(HTML.html_watch))
 
-        # add '0' to the beginning of the string to make all string same length
-        for time in match_list:
-            if time[0].isalpha():
-                if time[6] != ",":
-                    time = time[:4] + "0" + time[4:]
-                day_of_week = datetime.datetime.strptime(
-                    time[0:12], "%b %d, %Y"
-                ).strftime("%a")
-                time = time[:6] + time[7:]
-                dt = datetime.datetime.strptime(time[12:24].strip(), "%I:%M:%S %p")
-                times.append(
-                    time[:13]
-                    + dt.strftime("%H:%M:%S")
-                    + " "
-                    + time[-3:]
-                    + " "
-                    + day_of_week
-                )
-            else:
-                if len(time) == 24:
-                    time = str(0) + time
-                    # add the day of week to the end of strings
-                    day_of_week = datetime.datetime.strptime(
-                        time[0:11], "%d %b %Y"
-                    ).strftime("%a")
-                    times.append(time + " " + day_of_week)
-                else:
-                    # add the day of week to the end of strings
-                    day_of_week = datetime.datetime.strptime(
-                        time[0:11], "%d %b %Y"
-                    ).strftime("%a")
-                    times.append(time + " " + day_of_week)
+        # Format all matched dates
+        times = [parser.parse(time).strftime("%d %b %Y, %H:%M:%S UTC %a") for time in match_list] # parser recognize any kind of date format
+
         return times
 
     def search_history(self):
