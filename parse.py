@@ -33,14 +33,26 @@ class HTML:
             links.append(match)
         return links
 
-    def _find_times(self):
+    def _find_times_datetime(self):
         # Match any kind of date format
-        pattern = re.compile(r'(?<=<br>)([^>]*)(?=</div><div )') 
+        pattern = re.compile(r'(?<=<br>)([^>]*)(?=</div><div )')
         match_list = pattern.findall(str(HTML.html_watch))
 
-        # Format all matched dates
         # parser recognize any kind of date format
-        times = [parser.parse(time).strftime("%d %b %Y, %H:%M:%S UTC %a") for time in match_list] 
+        times = [parser.parse(time) for time in match_list]
+        return times
+
+    def _find_times(self):
+        """
+        Find and format times within the HTML file.
+
+        Returns
+        -------
+        times : List[str]
+            e.g. "19 Feb 2013, 11:56:19 UTC Tue"
+        """
+        # Format all matched dates
+        times = [datetime_obj.strftime("%d %b %Y, %H:%M:%S UTC %a") for datetime_obj in self._find_times_datetime()]
         return times
 
     def search_history(self):
@@ -77,69 +89,23 @@ class HTML:
             return link, match_list
 
     def dataframe_heatmap(self, day):
-        time_weeks = []
-        day_time = []
-        times = self._find_times()
-        for time in times:
-            time_week = time[-3:] + time[13:15]
-            time_weeks.append(time_week)
-        freq = collections.Counter(time_weeks)
-        for k, v in freq.items():
-            if k[0:3] == day:
-                day_time.append(str(k) + " " + str(v))
-        day_time.sort(key=lambda x: int(str(x)[3:5]))
-        print(day_time)
+        """
+        For the given day, count how many events happened in the time buckets.
 
-        zero_one = 0
-        two_three = 0
-        four_five = 0
-        six_seven = 0
-        eight_nine = 0
-        ten_eleven = 0
-        twelve_thirteen = 0
-        fourteen_fifteen = 0
-        sixteen_seventeen = 0
-        eighteen_nineteen = 0
-        twenty_twentyone = 0
-        twentytwo_twentythree = 0
-        for i in day_time:
-            dt = int(i[3:5])
-            if dt in range(0, 2):
-                zero_one = zero_one + int(i.split(" ")[1])
-            elif dt in range(2, 4):
-                two_three = two_three + int(i.split(" ")[1])
-            elif dt in range(4, 6):
-                four_five = four_five + int(i.split(" ")[1])
-            elif dt in range(6, 8):
-                six_seven = six_seven + int(i.split(" ")[1])
-            elif dt in range(8, 10):
-                eight_nine = eight_nine + int(i.split(" ")[1])
-            elif dt in range(10, 12):
-                ten_eleven = ten_eleven + int(i.split(" ")[1])
-            elif dt in range(12, 14):
-                twelve_thirteen = twelve_thirteen + int(i.split(" ")[1])
-            elif dt in range(14, 16):
-                fourteen_fifteen = fourteen_fifteen + int(i.split(" ")[1])
-            elif dt in range(16, 18):
-                sixteen_seventeen = sixteen_seventeen + int(i.split(" ")[1])
-            elif dt in range(18, 20):
-                eighteen_nineteen = eighteen_nineteen + int(i.split(" ")[1])
-            elif dt in range(20, 22):
-                twenty_twentyone = twenty_twentyone + int(i.split(" ")[1])
-            else:
-                twentytwo_twentythree = twentytwo_twentythree + int(i.split(" ")[1])
+        Parameters
+        ----------
+        day : {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}
 
-        return [
-            zero_one,
-            two_three,
-            four_five,
-            six_seven,
-            eight_nine,
-            ten_eleven,
-            twelve_thirteen,
-            fourteen_fifteen,
-            sixteen_seventeen,
-            eighteen_nineteen,
-            twenty_twentyone,
-            twentytwo_twentythree,
-        ]
+        Returns
+        -------
+        bucketed_event_counts : List[int]
+        """
+        # Get the correct day
+        times = self._find_times_datetime()
+        times = [datetime_obj for datetime_obj in times if datetime_obj.strftime("%a") == day]
+
+        # Get the bucket counts
+        bucketed_event_counts = [0 for _ in range(12)]
+        for datetime_obj in times:
+            bucketed_event_counts[datetime_obj.hour // 2] += 1
+        return bucketed_event_counts
