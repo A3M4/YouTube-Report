@@ -34,12 +34,13 @@ class HTML:
         return links
 
     def _find_times(self):
-        pattern = re.compile(r'(?<=<br>)([^>]*)(?=</div><div )') # Match any kind of date format
+        # Match any kind of date format
+        pattern = re.compile(r'(?<=<br>)([^>]*)(?=</div><div )') 
         match_list = pattern.findall(str(HTML.html_watch))
 
         # Format all matched dates
-        times = [parser.parse(time).strftime("%d %b %Y, %H:%M:%S UTC %a") for time in match_list] # parser recognize any kind of date format
-
+        # parser recognize any kind of date format
+        times = [parser.parse(time).strftime("%d %b %Y, %H:%M:%S UTC %a") for time in match_list] 
         return times
 
     def search_history(self):
