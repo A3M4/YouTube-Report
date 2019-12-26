@@ -76,9 +76,8 @@ class Visualization:
         )
 
         plt.annotate(
-            "             The plot above is based on a total of "
-            + str(len(HTML().find_links()))
-            + " videos you have watched",
+            "             The plot above is based on a total of {:,}"
+            " videos you have watched".format(len(HTML().find_links())),
             (0, 0),
             (0, -20),
             fontsize=20,
@@ -125,7 +124,191 @@ class Visualization:
         print("Generating Word Cloud.....")
         unique_string = (" ").join(search_clean)
         bg = np.array(Image.open(logo))
-        stop_words = ["porn", "nigga", "pussy"]
+        # import nltk.stopwords
+        # stopwords.words('english')
+        english_stopwords = [
+            "i",
+            "me",
+            "my",
+            "myself",
+            "we",
+            "our",
+            "ours",
+            "ourselves",
+            "you",
+            "you're",
+            "you've",
+            "you'll",
+            "you'd",
+            "your",
+            "yours",
+            "yourself",
+            "yourselves",
+            "he",
+            "him",
+            "his",
+            "himself",
+            "she",
+            "she's",
+            "her",
+            "hers",
+            "herself",
+            "it",
+            "it's",
+            "its",
+            "itself",
+            "they",
+            "them",
+            "their",
+            "theirs",
+            "themselves",
+            "what",
+            "which",
+            "who",
+            "whom",
+            "this",
+            "that",
+            "that'll",
+            "these",
+            "those",
+            "am",
+            "is",
+            "are",
+            "was",
+            "were",
+            "be",
+            "been",
+            "being",
+            "have",
+            "has",
+            "had",
+            "having",
+            "do",
+            "does",
+            "did",
+            "doing",
+            "a",
+            "an",
+            "the",
+            "and",
+            "but",
+            "if",
+            "or",
+            "because",
+            "as",
+            "until",
+            "while",
+            "of",
+            "at",
+            "by",
+            "for",
+            "with",
+            "about",
+            "against",
+            "between",
+            "into",
+            "through",
+            "during",
+            "before",
+            "after",
+            "above",
+            "below",
+            "to",
+            "from",
+            "up",
+            "down",
+            "in",
+            "out",
+            "on",
+            "off",
+            "over",
+            "under",
+            "again",
+            "further",
+            "then",
+            "once",
+            "here",
+            "there",
+            "when",
+            "where",
+            "why",
+            "how",
+            "all",
+            "any",
+            "both",
+            "each",
+            "few",
+            "more",
+            "most",
+            "other",
+            "some",
+            "such",
+            "no",
+            "nor",
+            "not",
+            "only",
+            "own",
+            "same",
+            "so",
+            "than",
+            "too",
+            "very",
+            "s",
+            "t",
+            "can",
+            "will",
+            "just",
+            "don",
+            "don't",
+            "should",
+            "should've",
+            "now",
+            "d",
+            "ll",
+            "m",
+            "o",
+            "re",
+            "ve",
+            "y",
+            "ain",
+            "aren",
+            "aren't",
+            "couldn",
+            "couldn't",
+            "didn",
+            "didn't",
+            "doesn",
+            "doesn't",
+            "hadn",
+            "hadn't",
+            "hasn",
+            "hasn't",
+            "haven",
+            "haven't",
+            "isn",
+            "isn't",
+            "ma",
+            "mightn",
+            "mightn't",
+            "mustn",
+            "mustn't",
+            "needn",
+            "needn't",
+            "shan",
+            "shan't",
+            "shouldn",
+            "shouldn't",
+            "wasn",
+            "wasn't",
+            "weren",
+            "weren't",
+            "won",
+            "won't",
+            "wouldn",
+            "wouldn't",
+        ]
+
+        stop_words = ["porn", "nigga", "pussy"] + english_stopwords
         font = (
             "arial"
             if sys.platform == "win32"
@@ -300,6 +483,7 @@ class Visualization:
         )
 
         # first watch
+        print("First watched video: " + urls[-1])
         body_style = ParagraphStyle("Body", fontSize=31)
         items1 = []
         link1 = "<link href=" + urls[-1] + ">PLAY</link>"
@@ -308,13 +492,20 @@ class Visualization:
         f1.addFromList(items1, img_doc)
 
         # most watch
+        most_watched_url = max(set(urls), key=urls.count)
+        print(
+            "Most Watched Video ({}x watched): {}".format(
+                urls.count(most_watched_url), most_watched_url
+            )
+        )
         items2 = []
-        link2 = "<link href=" + max(set(urls), key=urls.count) + ">PLAY</link>"
+        link2 = "<link href=" + most_watched_url + ">PLAY</link>"
         items2.append(Paragraph(link2, body_style))
         f2 = Frame(inch * 24.3, inch * 13.34, inch * 12, inch * 2)
         f2.addFromList(items2, img_doc)
 
         # first like
+        print("First like: " + like)
         items3 = []
         link3 = "<link href=" + like + ">PLAY</link>"
         items3.append(Paragraph(link3, body_style))
@@ -322,6 +513,7 @@ class Visualization:
         f3.addFromList(items3, img_doc)
 
         # first comment
+        print("First Commented Video: " + link)
         items4 = []
         link4 = "<link href=" + link + ">PLAY</link>"
         items4.append(Paragraph(link4, body_style))
