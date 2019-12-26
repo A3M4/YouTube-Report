@@ -208,7 +208,7 @@ class Visualization:
         plt.clf()
 
     def score(self):
-        print("Caculating Your Activity Score.....")
+        print("Calculating Your Activity Score.....")
         colors = ["#ff3300", "#33cc33"]
         score_value = round(
             math.log(
