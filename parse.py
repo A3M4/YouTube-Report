@@ -35,7 +35,7 @@ class HTML:
 
     def _find_times_datetime(self):
         # Match any kind of date format
-        pattern = re.compile(r'(?<=<br>)([^>]*)(?=</div><div )')
+        pattern = re.compile(r"(?<=<br>)([^>]*)(?=</div><div )")
         match_list = pattern.findall(str(HTML.html_watch))
 
         # parser recognize any kind of date format
@@ -52,7 +52,10 @@ class HTML:
             e.g. "19 Feb 2013, 11:56:19 UTC Tue"
         """
         # Format all matched dates
-        times = [datetime_obj.strftime("%d %b %Y, %H:%M:%S UTC %a") for datetime_obj in self._find_times_datetime()]
+        times = [
+            datetime_obj.strftime("%d %b %Y, %H:%M:%S UTC %a")
+            for datetime_obj in self._find_times_datetime()
+        ]
         return times
 
     def search_history(self):
@@ -102,7 +105,9 @@ class HTML:
         """
         # Get the correct day
         times = self._find_times_datetime()
-        times = [datetime_obj for datetime_obj in times if datetime_obj.strftime("%a") == day]
+        times = [
+            datetime_obj for datetime_obj in times if datetime_obj.strftime("%a") == day
+        ]
 
         # Get the bucket counts
         bucketed_event_counts = [0 for _ in range(12)]
