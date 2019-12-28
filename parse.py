@@ -3,60 +3,63 @@ import re
 import os
 import json
 import datetime
-import itertools
 import collections
+import itertools
+from dateutils import parser
 
 missing=[]
-Dir = os.path.join(os.getcwd(),"Takeout/YouTube/")
-if not os.path.exists(Dir):
-	missing.append(Dir)
+dir = os.path.join(os.getcwd(),"Takeout/YouTube/")
+if not os.path.exists(dir):
+	missing.append(dir)
 found=False
 for path in ('Verlauf/Wiedergabeverlauf.html','history/watch-history.html'):	#translations
-	watchHistory = os.path.join(Dir,path)
-	if os.path.exists(watchHistory):
+	watch_history = os.path.join(dir,path)
+	if os.path.exists(watch_history):
 		found=True
 		break
 if not found:
-	missing.append(watchHistory)
+	missing.append(watch_history)
 found=False
 for path in ('Verlauf/Suchverlauf.html','history/search-history.html'):	#translations
-	searchHistory = os.path.join(Dir,path)
-	if os.path.exists(searchHistory):
+	search_history = os.path.join(dir,path)
+	if os.path.exists(search_history):
 		found=True
 		break
 if not found:
-	missing.append(searchHistory)
+	missing.append(search_history)
 found=False
 for path in ('Meine Kommentare/Meine Kommentare.html','my-comments/my-comments.html'):	#translations
-	commentsHistory = os.path.join(Dir,path)
-	if os.path.exists(commentsHistory):
+	comments_history = os.path.join(dir,path)
+	if os.path.exists(comments_history):
 		found=True
 		break
 if not found:
-	missing.append(commentsHistory)
+	missing.append(comments_history)
 found=False
 for path in ('Playlists/Positive Bewertungen.json','playlists/likes.json'):	#translations
-	likeHistory = os.path.join(Dir,path)
-	if os.path.exists(likeHistory):
+	like_history = os.path.join(dir,path)
+	if os.path.exists(like_history):
 		found=True
 		break
 if not found:
-	missing.append(likeHistory)
+	missing.append(like_history)
 del found
 
 if len(missing)>0:
 	raise OSError("Required directories do not exist: %s"%(missing))
+del missing
 
 
 class HTML:
-    with open(watchHistory, 'r', encoding='utf-8') as f:
-        htmlWatch = f.read()
-    with open(searchHistory, 'r', encoding='utf-8') as f:
-        htmlSearch = f.read()
+    with open(watch_history, "r", encoding="utf-8") as f:
+        html_watch = f.read()
+    with open(search_history, "r", encoding="utf-8") as f:
+        html_search = f.read()
     try:
-        with open(commentHistory, 'r', encoding='utf-8') as f:
-            htmlComment = f.read()
-    except: pass
+        with open(comment_history, "r", encoding="utf-8") as f:
+            html_comment = f.read()
+    except Exception:
+       print("Could not parse comments.")
 
     def find_links(self):
         # search all links based on your personal html file
@@ -84,52 +87,62 @@ class HTML:
         pattern = re.compile(translation)
         matchList = pattern.findall(str(self.htmlWatch))
         times=[]
-        # add '0' to the beginning of the string to make all string same length
         for time in matchList:
             times.append(datetime.datetime.strptime("%s.%s.%s %s:%s:%s %s"%(time),'%d.%m.%Y %H:%M:%S %Z'))
         return times
 
+    def _find_times(self):
+        """
+        Find and format times within the HTML file.
 
-    def searchHistory(self):
-        searchRaw = []
-        searchClean = []
-        pattern = re.compile(r'search_query=[^%].*?>')
-        matchList = pattern.findall(str(self.htmlSearch))
+        Returns
+        -------
+        times : List[str]
+            e.g. "19 Feb 2013, 11:56:19 UTC Tue"
+        """
+        # Format all matched dates
+        times = [
+            datetime_obj.strftime("%d %b %Y, %H:%M:%S UTC %a")
+            for datetime_obj in self._find_times_datetime()
+        ]
+        return times
+
+    def search_history(self):
+        search_raw = []
+        search_clean = []
+        pattern = re.compile(r"search_query=[^%].*?>")
+        match_list = pattern.findall(str(HTML.html_search))
 
         # save links into list
-        for match in matchList:
-            match = match[13:][:-3]
-            match = match.split('+')
-            searchRaw.append(match)
-        for word in list(itertools.chain.from_iterable(searchRaw)):
-            if '%' not in word:
-                searchClean.append(word)
-        return searchRaw, searchClean
+        for match in match_list:
+            match = match[13:][:-2]
+            match = match.split("+")
+            search_raw.append(match)
+        for word in list(itertools.chain.from_iterable(search_raw)):
+            if "%" not in word:
+                search_clean.append(word)
+        return search_raw, search_clean
 
-
-
-    def commentHistory(self):
+    def comment_history(self):
         try:
             pattern = re.compile(r'<a href=".*?">')
-            matchList = pattern.findall(str(self.htmlComment))
-            link = matchList[-1][9:][:-2]
-            return link, matchList
-        except:
+            match_list = pattern.findall(str(HTML.html_comment))
+            link = match_list[-1][9:][:-2]
+            return link, match_list
+        except Exception:
             pass
 
-
-
-    def likeHistory(self):
-        with open(likeHistory, 'rb') as f:
+    def like_history(self):
+        with open(like_history, "rb") as f:
             data = json.load(f)
-            pattern = re.compile(r'videoId.{15}')
-            matchList = pattern.findall(str(data))
-            link = r"https://www.youtube.com/watch?v=" + matchList[-1][11:]
-            return link, matchList
+            pattern = re.compile(r"videoId.{15}")
+            match_list = pattern.findall(str(data))
+            link = r"https://www.youtube.com/watch?v=" + match_list[-1][11:]
+            return link, match_list
 
 
 
-    def dataframe_heatmap(self,day):
+    def dataframe_heatmap(self, day):
         times = self.find_times()
         watchtimes=[0 for t in range(12)]
         

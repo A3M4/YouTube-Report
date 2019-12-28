@@ -1,5 +1,5 @@
 # Generate Your Personal YouTube Report
-<img src="https://i.ibb.co/HngnXpn/You-Tube-Report.png" alt="avatar" width="571" height="625">
+<img src="https://i.ibb.co/H255wkD/You-Tube-Report-1.png" alt="avatar" width="571" height="656">
 
 ## Getting Started
 
@@ -19,6 +19,8 @@ To use this script, you only need to select and download "YouTube", which Google
 ### 3. Clone This Repository
 
 On https://github.com/A3M4/Personal-YouTube-Report-Generator, click the green "Clone or Download" button at the top right of the page. Then, click the "Download ZIP" button, and extract the ZIP somewhere on your computer.
+
+NOTE: Make sure to set your [Google Account language ](https://support.google.com/accounts/answer/32047)to English before downloading
 
 ### 4. Extract the Takeout File
 
