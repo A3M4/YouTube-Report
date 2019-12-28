@@ -55,7 +55,7 @@ class HTML:
     with open(search_history, "r", encoding="utf-8") as f:
         html_search = f.read()
     try:
-        with open(comment_history, "r", encoding="utf-8") as f:
+        with open(comments_history, "r", encoding="utf-8") as f:
             html_comment = f.read()
     except Exception:
        print("Could not parse comments.")
@@ -124,7 +124,7 @@ class HTML:
 
     def comment_history(self):
         try:
-            pattern = re.compile(r"<a href=".*?">")
+            pattern = re.compile(r"<a href='.*?'>")
             match_list = pattern.findall(str(HTML.html_comment))
             link = match_list[-1][9:][:-2]
             return link, match_list
