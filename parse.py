@@ -5,7 +5,6 @@ import json
 import datetime
 import collections
 import itertools
-from dateutils import parser
 
 missing=[]
 dir = os.path.join(os.getcwd(),"Takeout/YouTube/")
@@ -71,7 +70,7 @@ class HTML:
         return links
     def raw_find_links(self,translation):
         pattern = re.compile(translation)
-        matchList = pattern.findall(str(self.htmlWatch))
+        matchList = pattern.findall(str(self.html_watch))
 
         # save links into list
         return [match for match in matchList if type(match)==str]	#just sorting out stuff that could f up the whole script
@@ -85,7 +84,7 @@ class HTML:
         
     def raw_find_times(self,translation):
         pattern = re.compile(translation)
-        matchList = pattern.findall(str(self.htmlWatch))
+        matchList = pattern.findall(str(self.html_watch))
         times=[]
         for time in matchList:
             times.append(datetime.datetime.strptime("%s.%s.%s %s:%s:%s %s"%(time),'%d.%m.%Y %H:%M:%S %Z'))

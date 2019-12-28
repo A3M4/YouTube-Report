@@ -335,7 +335,7 @@ class Visualization:
                   fontweight="bold",
                   fontname="Comic Sans MS")
 
-        plt.annotate("   WordCloud is based on a total of %s search queries"%(str(len(searchClean))),
+        plt.annotate("   WordCloud is based on a total of %s search queries"%(str(len(search_clean))),
                      (0, 0), (-10, 10),
                      fontsize=13,
                      color='steelblue',
@@ -406,7 +406,7 @@ class Visualization:
                   fontweight="bold",
                   fontname="Arial")
 
-        plt.annotate(scoreValue,
+        plt.annotate(score_value,
                      (0, 0), (123, 154),
                      fontsize=54,
                      color="teal",
