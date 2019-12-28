@@ -67,7 +67,7 @@ class Visualization:
         ]
         plt.figure(figsize=(20, 5))
         sns.heatmap(df,
-                    cmap='Blues',
+                    cmap="Blues",
                     linewidths=2,
                     xticklabels=Cols,
                     yticklabels=Index)
@@ -123,7 +123,7 @@ class Visualization:
         unique_string = (" ").join(search_clean)
         bg = np.array(Image.open(logo))
         # import nltk.stopwords
-        # stopwords.words('english')
+        # stopwords.words("english")
         english_stopwords = [
             "i",
             "me",
@@ -328,24 +328,24 @@ class Visualization:
         plt.figure()
         plt.imshow(wordcloud)
         plt.axis("off")
-        # plt.savefig("your_file_name"+".png", bbox_inches='tight')
+        # plt.savefig("your_file_name"+".png", bbox_inches="tight")
         plt.title("What Do You Usually Search on YouTube?",
                   fontsize=18,
-                  color='steelblue',
+                  color="steelblue",
                   fontweight="bold",
                   fontname="Comic Sans MS")
 
         plt.annotate("   WordCloud is based on a total of %s search queries"%(str(len(search_clean))),
                      (0, 0), (-10, 10),
                      fontsize=13,
-                     color='steelblue',
+                     color="steelblue",
                      fontweight="bold",
                      fontname="Comic Sans MS",
-                     xycoords='axes fraction',
-                     textcoords='offset points',
-                     va='top')
+                     xycoords="axes fraction",
+                     textcoords="offset points",
+                     va="top")
 
-        plt.savefig(os.path.join(image_dir,'word_cloud.png'), dpi=400)
+        plt.savefig(os.path.join(image_dir,"word_cloud.png"), dpi=400)
         plt.clf()
 
     def bar(self):
@@ -373,10 +373,10 @@ class Visualization:
         splot.grid(False)
         plt.title("Breakdown of Your Activity on Youtube",
                   fontsize=24,
-                  color='steelblue',
+                  color="steelblue",
                   fontweight="bold",
                   fontname="Comic Sans MS")
-        plt.savefig(os.path.join(image_dir,'bar.png'), dpi=400)
+        plt.savefig(os.path.join(image_dir,"bar.png"), dpi=400)
         plt.clf()
 
     def score(self):
@@ -477,7 +477,7 @@ class Visualization:
             )
         )
         items2 = []
-        link2 = '<link href=%s>PLAY</link>'%(max(set(urls), key=urls.count))
+        link2 = "<link href=%s>PLAY</link>"%(max(set(urls), key=urls.count))
         items2.append(Paragraph(link2, body_style))
         f2 = Frame(inch * 24.1, inch * 13.37, inch * 12, inch * 2)
         f2.addFromList(items2, img_doc)
@@ -485,7 +485,7 @@ class Visualization:
         # first like
         print("First like: " + like)
         items3 = []
-        link3 = '<link href=%s>PLAY</link>'%(like)
+        link3 = "<link href=%s>PLAY</link>"%(like)
         items3.append(Paragraph(link3, body_style))
         f3 = Frame(inch * 24.1, inch * 11.85, inch * 12, inch * 2)
         f3.addFromList(items3, img_doc)
@@ -509,7 +509,7 @@ class Visualization:
         pdf.addPage(PdfFileReader(BytesIO(img_temp.getvalue())).getPage(0))
         with open("YouTube_Report.pdf","wb") as f:
         	pdf.write(f)
-        print('Congratulations! You have successfully created your personal YouTube report!')
+        print("Congratulations! You have successfully created your personal YouTube report!")
         if sys.platform == "win32":
             os.startfile("YouTube_Report.pdf")
         else:

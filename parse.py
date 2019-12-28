@@ -11,7 +11,7 @@ dir = os.path.join(os.getcwd(),"Takeout/YouTube/")
 if not os.path.exists(dir):
 	missing.append(dir)
 found=False
-for path in ('Verlauf/Wiedergabeverlauf.html','history/watch-history.html'):	#translations
+for path in ("Verlauf/Wiedergabeverlauf.html","history/watch-history.html"):	#translations
 	watch_history = os.path.join(dir,path)
 	if os.path.exists(watch_history):
 		found=True
@@ -19,7 +19,7 @@ for path in ('Verlauf/Wiedergabeverlauf.html','history/watch-history.html'):	#tr
 if not found:
 	missing.append(watch_history)
 found=False
-for path in ('Verlauf/Suchverlauf.html','history/search-history.html'):	#translations
+for path in ("Verlauf/Suchverlauf.html","history/search-history.html"):	#translations
 	search_history = os.path.join(dir,path)
 	if os.path.exists(search_history):
 		found=True
@@ -27,7 +27,7 @@ for path in ('Verlauf/Suchverlauf.html','history/search-history.html'):	#transla
 if not found:
 	missing.append(search_history)
 found=False
-for path in ('Meine Kommentare/Meine Kommentare.html','my-comments/my-comments.html'):	#translations
+for path in ("Meine Kommentare/Meine Kommentare.html","my-comments/my-comments.html"):	#translations
 	comments_history = os.path.join(dir,path)
 	if os.path.exists(comments_history):
 		found=True
@@ -35,7 +35,7 @@ for path in ('Meine Kommentare/Meine Kommentare.html','my-comments/my-comments.h
 if not found:
 	missing.append(comments_history)
 found=False
-for path in ('Playlists/Positive Bewertungen.json','playlists/likes.json'):	#translations
+for path in ("Playlists/Positive Bewertungen.json","playlists/likes.json"):	#translations
 	like_history = os.path.join(dir,path)
 	if os.path.exists(like_history):
 		found=True
@@ -87,7 +87,7 @@ class HTML:
         matchList = pattern.findall(str(self.html_watch))
         times=[]
         for time in matchList:
-            times.append(datetime.datetime.strptime("%s.%s.%s %s:%s:%s %s"%(time),'%d.%m.%Y %H:%M:%S %Z'))
+            times.append(datetime.datetime.strptime("%s.%s.%s %s:%s:%s %s"%(time),"%d.%m.%Y %H:%M:%S %Z"))
         return times
 
     def _find_times(self):
@@ -124,7 +124,7 @@ class HTML:
 
     def comment_history(self):
         try:
-            pattern = re.compile(r'<a href=".*?">')
+            pattern = re.compile(r"<a href=".*?">")
             match_list = pattern.findall(str(HTML.html_comment))
             link = match_list[-1][9:][:-2]
             return link, match_list
