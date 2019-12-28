@@ -124,7 +124,7 @@ class HTML:
 
     def comment_history(self):
         try:
-            pattern = re.compile(r"<a href='.*?'>")
+            pattern = re.compile(r"""<a href=['"].*?['"]>""")
             match_list = pattern.findall(str(HTML.html_comment))
             link = match_list[-1][9:][:-2]
             return link, match_list
