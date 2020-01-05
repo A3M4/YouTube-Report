@@ -4,6 +4,7 @@ import re
 import subprocess
 import sys
 from io import BytesIO
+from shutil import which
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -538,10 +539,12 @@ class Visualization:
         )
         if sys.platform == "win32":
             os.startfile("YouTube_Report.pdf")
+        elif sys.platform == "darwin":
+            subprocess.call(["open", "YouTube_Report.pdf"])
+        elif which("xdg-open") is not None:
+            subprocess.call(["xdg-open", "YouTube_Report.pdf"])
         else:
-            opener = "open" if sys.platform == "darwin" else "xdg-open"
-            subprocess.call([opener, "YouTube_Report.pdf"])
-
+            print("No opener found for your platform. Just open YouTube_Report.pdf.")
 
 if __name__ == "__main__":
     visual = Visualization()
