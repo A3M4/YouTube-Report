@@ -307,24 +307,30 @@ class Visualization:
         ]
 
         stop_words = ["porn", "nigga", "pussy"] + english_stopwords
-        font = (
-            "arial"
-            if sys.platform == "win32"
-            else "DejaVuSansMono"
-            if sys.platform == "linux"
-            else "Arial"
-        )
-        wordcloud = WordCloud(
-            stopwords=stop_words,
-            mask=bg,
-            background_color="white",
-            colormap="Set2",
-            font_path=font,
-            max_words=380,
-            contour_width=2,
-            prefer_horizontal=1,
-        ).generate(unique_string)
-
+        found=False
+        FONTS=("LinBiolinum_R","Arial","arial","DejaVuSansMono")
+        for font in FONTS:	#this should fix an error where the font couldn't be found
+            try:
+                wordcloud = WordCloud(
+                    stopwords=stop_words,
+                    mask=bg,
+                    background_color="white",
+                    colormap="Set2",
+                    font_path=font,
+                    max_words=380,
+                    contour_width=2,
+                    prefer_horizontal=1,
+                ).generate(unique_string)
+            except OSError:
+                continue
+            else:
+                found=True
+                break
+        if not found:
+            raise OSError("Could not find any of these fonts: %s"%(FONTS))
+        del FONTS
+        del found
+        
         plt.figure()
         plt.imshow(wordcloud)
         plt.axis("off")
