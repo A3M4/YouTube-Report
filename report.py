@@ -23,6 +23,8 @@ from parse import HTML
 image_dir = os.path.join(os.getcwd(),"Images/")
 logo = os.path.join(image_dir,"LOGO.png")
 urls = HTML().find_links()
+if(len(urls)==0):
+    raise ValueError("Could not find any links. Please send the developer your takeout data, so the issue can be addressed")
 search_raw, search_clean = HTML().search_history()
 
 try:
