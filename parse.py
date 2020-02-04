@@ -2,7 +2,7 @@
 import re
 import os
 import json
-import datetime
+import datetime,pytz
 import collections
 import itertools
 
@@ -65,7 +65,7 @@ class HTML:
         links = []
         #if you want to understand ↓these↓, go to regex101.com.
         #also, I just assumed that the previously written english regex was faulty too, but replace that one if needed. I've only got the german one on hand.
-        for translation in (r"""<a href=\"([^\"]*)\">[^<]*<\/a>\xa0watched""",r"""<a href=\"([^\"]*)\">[^<]*<\/a>\xa0angesehen"""):
+        for translation in (r"""Watched\xa0<a href=\"([^\"]*)\">[^<]*<\/a>""",r"""<a href=\"([^\"]*)\">[^<]*<\/a>\xa0angesehen"""):
             links+=self.raw_find_links(translation)
         return links
     def raw_find_links(self,translation):
@@ -78,16 +78,16 @@ class HTML:
 
     def find_times(self):
         times = []
-        for translation in (r"""\xa0watched<br><a href=\"[^\"]*\">[^<]*<\/a><br>(\d\d?)\.(\d\d?)\.(\d\d\d\d), (\d\d?):(\d\d?):(\d\d?) ([^<]*)<\/div>""",r"""\xa0angesehen<br><a href=\"[^\"]*\">[^<]*<\/a><br>(\d\d?)\.(\d\d?)\.(\d\d\d\d), (\d\d?):(\d\d?):(\d\d?) ([^<]*)<\/div>"""):
-        	times+=self.raw_find_times(translation)
+        for translation in ((r"""<\/a><br><a href=\"[^\"]*\">[^<]*<\/a><br>(\D*) (\d\d?), (\d\d\d\d), (\d\d?):(\d\d?):(\d\d?) (AM|PM) ([^<]*)<\/div>""","%s %s, %s, %s:%s:%s %s","%b %d, %Y, %I:%M:%S %p"),(r"""\xa0angesehen<br><a href=\"[^\"]*\">[^<]*<\/a><br>(\d\d?)\.(\d\d?)\.(\d\d\d\d), (\d\d?):(\d\d?):(\d\d?) ([^<]*)<\/div>""","%s.%s.%s %s:%s:%s","%d.%m.%Y %H:%M:%S")):
+        	times+=self.raw_find_times(*translation)
         return times
         
-    def raw_find_times(self,translation):
-        pattern = re.compile(translation)
+    def raw_find_times(self,regex,timegex,timegex2):
+        pattern = re.compile(regex)
         matchList = pattern.findall(str(self.html_watch))
         times=[]
         for time in matchList:
-            times.append(datetime.datetime.strptime("%s.%s.%s %s:%s:%s %s"%(time),"%d.%m.%Y %H:%M:%S %Z"))
+            times.append(pytz.timezone(time[-1]).localize(datetime.datetime.strptime(timegex%(time[:-1]),timegex2)))
         return times
 
     def _find_times(self):
