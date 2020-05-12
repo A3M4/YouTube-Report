@@ -1,45 +1,93 @@
+#!/usr/bin/python3
+import re
+import os
+import json
+import datetime,pytz
 import collections
 import itertools
-import json
-import os
-import re
 
-from dateutil import parser
+missing=[]
+dir = os.path.join(os.getcwd(),"Takeout/YouTube/")
+if not os.path.exists(dir):
+	missing.append(dir)
+found=False
+for path in ("Verlauf/Wiedergabeverlauf.html","history/watch-history.html"):	#translations
+	watch_history = os.path.join(dir,path)
+	if os.path.exists(watch_history):
+		found=True
+		break
+if not found:
+	missing.append(watch_history)
+found=False
+for path in ("Verlauf/Suchverlauf.html","history/search-history.html"):	#translations
+	search_history = os.path.join(dir,path)
+	if os.path.exists(search_history):
+		found=True
+		break
+if not found:
+	missing.append(search_history)
+found=False
+for path in ("Meine Kommentare/Meine Kommentare.html","my-comments/my-comments.html"):	#translations
+	comments_history = os.path.join(dir,path)
+	if os.path.exists(comments_history):
+		found=True
+		break
+if not found:
+	missing.append(comments_history)
+found=False
+for path in ("Playlists/Positive Bewertungen.json","playlists/likes.json"):	#translations
+	like_history = os.path.join(dir,path)
+	if os.path.exists(like_history):
+		found=True
+		break
+if not found:
+	missing.append(like_history)
+del found
 
-dir = os.getcwd() + "/Takeout/YouTube/"
-watch_history = dir + "history/watch-history.html"
-search_history = dir + "history/search-history.html"
-comment_history = dir + "my-comments/my-comments.html"
-like_history = dir + "playlists/likes.json"
+if len(missing)>0:
+	raise OSError("Required directories do not exist: %s"%(missing))
+del missing
 
 
 class HTML:
-    html_watch = open(watch_history, "r", encoding="utf-8").read()
-    html_search = open(search_history, "r", encoding="utf-8").read()
+    with open(watch_history, "r", encoding="utf-8") as f:
+        html_watch = f.read()
+    with open(search_history, "r", encoding="utf-8") as f:
+        html_search = f.read()
     try:
-        html_comment = open(comment_history, "r", encoding="utf-8").read()
+        with open(comments_history, "r", encoding="utf-8") as f:
+            html_comment = f.read()
     except Exception:
-        print("Could not parse comments.")
+       print("Could not parse comments.")
 
     def find_links(self):
         # search all links based on your personal html file
         links = []
-        pattern = re.compile(r"Watched.<.*?>")
-        match_list = pattern.findall(str(HTML.html_watch))
+        #if you want to understand ↓these↓, go to regex101.com.
+        #also, I just assumed that the previously written english regex was faulty too, but replace that one if needed. I've only got the german one on hand.
+        for translation in (r"""Watched\xa0<a href=\"([^\"]*)\">[^<]*<\/a>""",r"""<a href=\"([^\"]*)\">[^<]*<\/a>\xa0angesehen"""):
+            links+=self.raw_find_links(translation)
+        return links
+    def raw_find_links(self,translation):
+        pattern = re.compile(translation)
+        matchList = pattern.findall(str(self.html_watch))
 
         # save links into list
-        for match in match_list:
-            match = match.split('"')[1]
-            links.append(match)
-        return links
+        return [match for match in matchList if type(match)==str]	#just sorting out stuff that could f up the whole script
 
-    def _find_times_datetime(self):
-        # Match any kind of date format
-        pattern = re.compile(r"(?<=<br>)([^>]*)(?=</div><div )")
-        match_list = pattern.findall(str(HTML.html_watch))
 
-        # parser recognize any kind of date format
-        times = [parser.parse(time) for time in match_list]
+    def find_times(self):
+        times = []
+        for translation in ((r"""<\/a><br><a href=\"[^\"]*\">[^<]*<\/a><br>(\D*) (\d\d?), (\d\d\d\d), (\d\d?):(\d\d?):(\d\d?) (AM|PM) ([^<]*)<\/div>""","%s %s, %s, %s:%s:%s %s","%b %d, %Y, %I:%M:%S %p"),(r"""\xa0angesehen<br><a href=\"[^\"]*\">[^<]*<\/a><br>(\d\d?)\.(\d\d?)\.(\d\d\d\d), (\d\d?):(\d\d?):(\d\d?) ([^<]*)<\/div>""","%s.%s.%s %s:%s:%s","%d.%m.%Y %H:%M:%S")):
+        	times+=self.raw_find_times(*translation)
+        return times
+        
+    def raw_find_times(self,regex,timegex,timegex2):
+        pattern = re.compile(regex)
+        matchList = pattern.findall(str(self.html_watch))
+        times=[]
+        for time in matchList:
+            times.append(pytz.timezone(time[-1]).localize(datetime.datetime.strptime(timegex%(time[:-1]),timegex2)))
         return times
 
     def _find_times(self):
@@ -76,7 +124,7 @@ class HTML:
 
     def comment_history(self):
         try:
-            pattern = re.compile(r'<a href=".*?">')
+            pattern = re.compile(r"""<a href=['"].*?['"]>""")
             match_list = pattern.findall(str(HTML.html_comment))
             link = match_list[-1][9:][:-2]
             return link, match_list
@@ -91,26 +139,17 @@ class HTML:
             link = r"https://www.youtube.com/watch?v=" + match_list[-1][11:]
             return link, match_list
 
+
+
     def dataframe_heatmap(self, day):
-        """
-        For the given day, count how many events happened in the time buckets.
+        times = self.find_times()
+        watchtimes=[0 for t in range(12)]
+        
+        for time in times:
+        	if time.weekday()==day:
+        		watchtimes[(time.hour//2)-time.hour%2]+=1
 
-        Parameters
-        ----------
-        day : {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}
+        return watchtimes
 
-        Returns
-        -------
-        bucketed_event_counts : List[int]
-        """
-        # Get the correct day
-        times = self._find_times_datetime()
-        times = [
-            datetime_obj for datetime_obj in times if datetime_obj.strftime("%a") == day
-        ]
 
-        # Get the bucket counts
-        bucketed_event_counts = [0 for _ in range(12)]
-        for datetime_obj in times:
-            bucketed_event_counts[datetime_obj.hour // 2] += 1
-        return bucketed_event_counts
+

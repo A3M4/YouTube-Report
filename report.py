@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import math
 import os
 import re
@@ -19,9 +20,11 @@ from wordcloud import WordCloud
 
 from parse import HTML
 
-image_dir = os.getcwd() + "/Images/"
-logo = image_dir + "LOGO.png"
+image_dir = os.path.join(os.getcwd(),"Images/")
+logo = os.path.join(image_dir,"LOGO.png")
 urls = HTML().find_links()
+if(len(urls)==0):
+    raise ValueError("Could not find any links. Please send the developer your takeout data, so the issue can be addressed")
 search_raw, search_clean = HTML().search_history()
 
 try:
@@ -39,13 +42,13 @@ class Visualization:
     def heat_map(self):
         print("Generating Heat Map.....")
         html = HTML()
-        Mon = html.dataframe_heatmap("Mon")
-        Tue = html.dataframe_heatmap("Tue")
-        Wed = html.dataframe_heatmap("Wed")
-        Thu = html.dataframe_heatmap("Thu")
-        Fri = html.dataframe_heatmap("Fri")
-        Sat = html.dataframe_heatmap("Sat")
-        Sun = html.dataframe_heatmap("Sun")
+        Mon = html.dataframe_heatmap(0)
+        Tue = html.dataframe_heatmap(1)
+        Wed = html.dataframe_heatmap(2)
+        Thu = html.dataframe_heatmap(3)
+        Fri = html.dataframe_heatmap(4)
+        Sat = html.dataframe_heatmap(5)
+        Sun = html.dataframe_heatmap(6)
         df = np.vstack((Mon, Tue, Wed, Thu, Fri, Sat, Sun))
 
         print(df)
@@ -65,31 +68,29 @@ class Visualization:
             "10PM to 12AM",
         ]
         plt.figure(figsize=(20, 5))
-        sns.heatmap(df, cmap="Blues", linewidths=2, xticklabels=Cols, yticklabels=Index)
+        sns.heatmap(df,
+                    cmap="Blues",
+                    linewidths=2,
+                    xticklabels=Cols,
+                    yticklabels=Index)
 
-        plt.title(
-            "What Time Do You Usually Watch Youtube Videos? (Eastern Standard Time)",
-            fontsize=27,
-            color="steelblue",
-            fontweight="bold",
-            fontname="Arial",
-        )
+        plt.title("What Time Do You Usually Watch Youtube Videos? (Eastern Standard Time)",
+                  fontsize=27,
+                  color="steelblue",
+                  fontweight="bold",
+                  fontname="Arial")
 
-        plt.annotate(
-            "             The plot above is based on a total of {:,}"
-            " videos you have watched".format(len(HTML().find_links())),
-            (0, 0),
-            (0, -20),
-            fontsize=20,
-            color="steelblue",
-            fontweight="bold",
-            fontname="Arial",
-            xycoords="axes fraction",
-            textcoords="offset points",
-            va="top",
-        )
+        plt.annotate("             The plot above is based on a total of %s videos you have watched"%(len(HTML().find_links())),
+                     (0, 0), (0, -20),
+                     fontsize=20,
+                     color="steelblue",
+                     fontweight="bold",
+                     fontname="Arial",
+                     xycoords="axes fraction",
+                     textcoords="offset points",
+                     va="top")
 
-        plt.savefig(image_dir + "week_heatmap.png", dpi=400)
+        plt.savefig(os.path.join(image_dir,"week_heatmap.png"), dpi=400)
         plt.clf()
 
     def table(self):
@@ -115,9 +116,8 @@ class Visualization:
             textcoords="offset points",
             va="top",
         )
-
         plt.axis("off")
-        plt.savefig(image_dir + "memory.png", dpi=400)
+        plt.savefig(os.path.join(image_dir, "memory.png"), dpi=400)
         plt.clf()
 
     def wordCloud(self):
@@ -125,7 +125,7 @@ class Visualization:
         unique_string = (" ").join(search_clean)
         bg = np.array(Image.open(logo))
         # import nltk.stopwords
-        # stopwords.words('english')
+        # stopwords.words("english")
         english_stopwords = [
             "i",
             "me",
@@ -309,52 +309,51 @@ class Visualization:
         ]
 
         stop_words = ["porn", "nigga", "pussy"] + english_stopwords
-        font = (
-            "arial"
-            if sys.platform == "win32"
-            else "DejaVuSansMono"
-            if sys.platform == "linux"
-            else "Arial"
-        )
-        wordcloud = WordCloud(
-            stopwords=stop_words,
-            mask=bg,
-            background_color="white",
-            colormap="Set2",
-            font_path=font,
-            max_words=380,
-            contour_width=2,
-            prefer_horizontal=1,
-        ).generate(unique_string)
-
+        found=False
+        FONTS=("LinBiolinum_R","Arial","arial","DejaVuSansMono")
+        for font in FONTS:	#this should fix an error where the font couldn't be found
+            try:
+                wordcloud = WordCloud(
+                    stopwords=stop_words,
+                    mask=bg,
+                    background_color="white",
+                    colormap="Set2",
+                    font_path=font,
+                    max_words=380,
+                    contour_width=2,
+                    prefer_horizontal=1,
+                ).generate(unique_string)
+            except OSError:
+                continue
+            else:
+                found=True
+                break
+        if not found:
+            raise OSError("Could not find any of these fonts: %s"%(FONTS))
+        del FONTS
+        del found
+        
         plt.figure()
         plt.imshow(wordcloud)
         plt.axis("off")
-        # plt.savefig("your_file_name"+".png", bbox_inches='tight')
-        plt.title(
-            "What Do You Usually Search on YouTube?",
-            fontsize=18,
-            color="steelblue",
-            fontweight="bold",
-            fontname="Arial",
-        )
+        # plt.savefig("your_file_name"+".png", bbox_inches="tight")
+        plt.title("What Do You Usually Search on YouTube?",
+                  fontsize=18,
+                  color="steelblue",
+                  fontweight="bold",
+                  fontname="Comic Sans MS")
 
-        plt.annotate(
-            "      WordCloud is based on a total of "
-            + str(len(search_clean))
-            + " search queries",
-            (0, 0),
-            (-10, 10),
-            fontsize=13,
-            color="steelblue",
-            fontweight="bold",
-            fontname="Arial",
-            xycoords="axes fraction",
-            textcoords="offset points",
-            va="top",
-        )
+        plt.annotate("   WordCloud is based on a total of %s search queries"%(str(len(search_clean))),
+                     (0, 0), (-10, 10),
+                     fontsize=13,
+                     color="steelblue",
+                     fontweight="bold",
+                     fontname="Comic Sans MS",
+                     xycoords="axes fraction",
+                     textcoords="offset points",
+                     va="top")
 
-        plt.savefig(image_dir + "word_cloud.png", dpi=400)
+        plt.savefig(os.path.join(image_dir,"word_cloud.png"), dpi=400)
         plt.clf()
 
     def bar(self):
@@ -380,14 +379,12 @@ class Visualization:
                 ha="left",
             )
         splot.grid(False)
-        plt.title(
-            "Breakdown of Your Activity on Youtube",
-            fontsize=24,
-            color="steelblue",
-            fontweight="bold",
-            fontname="Arial",
-        )
-        plt.savefig(image_dir + "bar.png", dpi=400)
+        plt.title("Breakdown of Your Activity on Youtube",
+                  fontsize=24,
+                  color="steelblue",
+                  fontweight="bold",
+                  fontname="Comic Sans MS")
+        plt.savefig(os.path.join(image_dir,"bar.png"), dpi=400)
         plt.clf()
 
     def score(self):
@@ -407,47 +404,36 @@ class Visualization:
             1,
         )
         x_0 = [1, 0, 0, 0]
-        pl.pie(
-            [100 - score_value, score_value],
-            autopct="%1.1f%%",
-            startangle=90,
-            colors=colors,
-            pctdistance=10,
-        )
+        pl.pie([100 - score_value, score_value], autopct="%1.1f%%", startangle=90, colors=colors, pctdistance=10)
         plt.pie(x_0, radius=0.7, colors="w")
         plt.axis("equal")
 
-        plt.title(
-            "Your YouTube Activity Score",
-            fontsize=21,
-            color="steelblue",
-            fontweight="bold",
-            fontname="Arial",
-        )
+        plt.title("Your YouTube Activity Score",
+                  fontsize=21,
+                  color="steelblue",
+                  fontweight="bold",
+                  fontname="Arial")
 
-        plt.annotate(
-            score_value,
-            (0, 0),
-            (123, 154),
-            fontsize=54,
-            color="teal",
-            fontweight="bold",
-            fontname="Arial",
-            xycoords="axes fraction",
-            textcoords="offset points",
-            va="top",
-        )
-        plt.savefig(image_dir + "score.png", dpi=400)
+        plt.annotate(score_value,
+                     (0, 0), (123, 154),
+                     fontsize=54,
+                     color="teal",
+                     fontweight="bold",
+                     fontname="Arial",
+                     xycoords="axes fraction",
+                     textcoords="offset points",
+                     va="top")
+        plt.savefig(os.path.join(image_dir,"score.png"), dpi=400)
         plt.clf()
 
     def gen_pdf(self):
         print("Combining Images into PDF.....")
-        path1 = image_dir + "week_heatmap.png"
-        path2 = image_dir + "memory.png"
-        path3 = image_dir + "word_cloud.png"
-        path4 = image_dir + "bar.png"
-        path5 = image_dir + "score.png"
-        path6 = image_dir + "red.png"
+        path1 = os.path.join(image_dir, "week_heatmap.png")
+        path2 = os.path.join(image_dir, "memory.png")
+        path3 = os.path.join(image_dir, "word_cloud.png")
+        path4 = os.path.join(image_dir, "bar.png")
+        path5 = os.path.join(image_dir, "score.png")
+        path6 = os.path.join(image_dir, "red.png")
         pdf = PdfFileWriter()
 
         # Using ReportLab Canvas to insert image into PDF
@@ -486,9 +472,9 @@ class Visualization:
         print("First watched video: " + urls[-1])
         body_style = ParagraphStyle("Body", fontSize=31)
         items1 = []
-        link1 = "<link href=" + urls[-1] + ">PLAY</link>"
+        link1 = "<link href=%s>PLAY</link>"%(urls[-1])
         items1.append(Paragraph(link1, body_style))
-        f1 = Frame(inch * 24.3, inch * 14.88, inch * 12, inch * 2)
+        f1 = Frame(inch*24.1, inch*14.89, inch*12, inch*2)
         f1.addFromList(items1, img_doc)
 
         # most watch
@@ -499,43 +485,39 @@ class Visualization:
             )
         )
         items2 = []
-        link2 = "<link href=" + most_watched_url + ">PLAY</link>"
+        link2 = "<link href=%s>PLAY</link>"%(max(set(urls), key=urls.count))
         items2.append(Paragraph(link2, body_style))
-        f2 = Frame(inch * 24.3, inch * 13.34, inch * 12, inch * 2)
+        f2 = Frame(inch * 24.1, inch * 13.37, inch * 12, inch * 2)
         f2.addFromList(items2, img_doc)
 
         # first like
         print("First like: " + like)
         items3 = []
-        link3 = "<link href=" + like + ">PLAY</link>"
+        link3 = "<link href=%s>PLAY</link>"%(like)
         items3.append(Paragraph(link3, body_style))
-        f3 = Frame(inch * 24.3, inch * 11.79, inch * 12, inch * 2)
+        f3 = Frame(inch * 24.1, inch * 11.85, inch * 12, inch * 2)
         f3.addFromList(items3, img_doc)
 
         # first comment
         print("First Commented Video: " + link)
         items4 = []
-        link4 = "<link href=" + link + ">PLAY</link>"
+        link4 = "<link href=%s>PLAY</link>"%(link)
         items4.append(Paragraph(link4, body_style))
         f4 = Frame(inch * 24.3, inch * 10.25, inch * 12, inch * 2)
         f4.addFromList(items4, img_doc)
 
         # first search
         items5 = []
-        link5 = (
-            "<link href="
-            ">" + str(re.sub("[^\w\s]", "", str(search_raw[-1]))) + "</link>"
-        )
+        link5 = "<link href=''>%s</link>"%(re.sub("[^\w\s]", "", str(search_raw[-1])))
         items5.append(Paragraph(link5, body_style))
         f5 = Frame(inch * 23.7, inch * 8.73, inch * 12, inch * 2)
         f5.addFromList(items5, img_doc)
 
         img_doc.save()
         pdf.addPage(PdfFileReader(BytesIO(img_temp.getvalue())).getPage(0))
-        pdf.write(open("YouTube_Report.pdf", "wb"))
-        print(
-            "Congratulations! You have successfully created your personal YouTube report!"
-        )
+        with open("YouTube_Report.pdf","wb") as f:
+        	pdf.write(f)
+        print("Congratulations! You have successfully created your personal YouTube report!")
         if sys.platform == "win32":
             os.startfile("YouTube_Report.pdf")
         else:
