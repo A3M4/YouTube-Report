@@ -9,6 +9,8 @@ import itertools
 missing=[]
 dir = os.path.join(os.getcwd(),"Takeout/YouTube/")
 if not os.path.exists(dir):
+    dir = os.path.join(os.getcwd(),"Takeout/YouTube and YouTube Music/")
+if not os.path.exists(dir):
 	missing.append(dir)
 found=False
 for path in ("Verlauf/Wiedergabeverlauf.html","history/watch-history.html"):	#translations
