@@ -521,6 +521,8 @@ class Visualization:
         print("Congratulations! You have successfully created your personal YouTube report!")
         if sys.platform == "win32":
             os.startfile("YouTube_Report.pdf")
+        elif sys.platform == "win64":
+            os.startfile("YouTube_Report.pdf")
         elif sys.platform == "darwin":
             subprocess.call(["open", "YouTube_Report.pdf"])
         elif which("xdg-open") is not None:
